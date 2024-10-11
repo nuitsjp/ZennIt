@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Zenn It! - 発行</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="publish-page">
+  <h1>Zenn It! - 発行</h1>
+  
+  <h2 class="required">タイトル</h2>
+  <input type="text" id="title" placeholder="例: yyyy-MM-dd-title.md" required>
+  <div id="titleError" class="error-message">タイトルを入力してください。</div>
+  
+  <h2 class="required">記事</h2>
+  <textarea id="article" rows="30" required></textarea>
+  <div id="articleError" class="error-message">記事を記載してください。</div>
+  
+  <!-- 新しいエラーメッセージ表示エリア -->
+  <div id="publishError" class="error-message" style="display: none;"></div>
+  
+  <div class="button-container">
+    <button id="publish">
+      <i class="material-icons">publish</i>発行
+    </button>
+    <button id="close">
+      <i class="material-icons">close</i>閉じる
+    </button>
+  </div>
+
+  <script src="../js/publish.bundle.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Zenn It!</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="popup-page">
+  <h1>Claude to Zenn</h1>
+
+  <button id="generateSummary" class="button">
+    <i class="material-icons">summarize</i>要約
+  </button>
+  
+  <button id="publishArticle" class="button">
+    <i class="material-icons">publish</i>発行
+  </button>
+
+  <!-- ステータスメッセージ表示用の要素を追加 -->
+  <div id="statusMessage" class="status-message" aria-live="polite"></div>
+
+  <script src="../js/popup.bundle.js"></script>
+
+</body>
+</html>
