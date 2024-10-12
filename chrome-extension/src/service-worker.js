@@ -3,7 +3,7 @@
 // 主な機能は、拡張機能のインストール/アップデート時の初期化と、デフォルト設定の管理です。
 
 import STORAGE_KEYS from './js/constants.js';
-import Analytics from './js/google-analytics.js';
+import Analytics from './google-analytics.js';
 
 console.log("Zenn It! extension background loading...");
 

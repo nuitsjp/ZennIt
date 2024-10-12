@@ -3,7 +3,7 @@
 // 主な機能は、記事の要約生成と公開プロセスの開始です。
 
 // 共通の定数をインポート（ストレージキーなど）
-import STORAGE_KEYS from './constants.js';
+import STORAGE_KEYS from '../js/constants.js';
 
 console.log("Popup script started loading...");
 
