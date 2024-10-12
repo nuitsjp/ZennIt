@@ -2,7 +2,7 @@
 
 // 定数ファイルからストレージキーをインポート
 import STORAGE_KEYS from '../js/constants.js';
-import Analytics from '../google-analytics.js';
+import Analytics from '../js/google-analytics.js';
 
 // グローバル定数定義
 const FEEDBACK_DURATION = 3000; // フィードバック表示時間（ミリ秒）

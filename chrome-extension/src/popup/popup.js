@@ -4,7 +4,7 @@
 
 // 共通の定数をインポート（ストレージキーなど）
 import STORAGE_KEYS from '../js/constants.js';
-import Analytics from '../google-analytics.js';
+import Analytics from '../js/google-analytics.js';
 
 console.log("Popup script started loading...");
 

@@ -25,7 +25,7 @@
     "default_popup": "popup/popup.html"
   },
   "background": {
-    "service_worker": "service-worker.bundle.js",
+    "service_worker": "js/service-worker.bundle.js",
     "type": "module"
   },
   "content_scripts": [
