@@ -1,11 +1,26 @@
 // options.js
 
 // 定数ファイルからストレージキーをインポート
-import STORAGE_KEYS from './constants.js';
+import STORAGE_KEYS from '../js/constants.js';
+import Analytics from '../google-analytics.js';
 
 // グローバル定数定義
 const FEEDBACK_DURATION = 3000; // フィードバック表示時間（ミリ秒）
 const FADE_DURATION = 500; // フェードアウト時間（ミリ秒）
+
+console.log("Options script started loading...");
+
+// Fire a page view event on load
+window.addEventListener('load', () => {
+  Analytics.firePageViewEvent(document.title, document.location.href);
+});
+
+// Listen globally for all button events
+document.addEventListener('click', (event) => {
+  if (event.target instanceof HTMLButtonElement) {
+    Analytics.fireEvent('click_button', { id: event.target.id });
+  }
+});
 
 // DOM操作を簡略化するユーティリティ関数
 const $ = document.querySelector.bind(document);
@@ -188,3 +203,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ui = new OptionsUI();
   await ui.initialize();
 });
+
+console.log("Options script loaded successfully.");

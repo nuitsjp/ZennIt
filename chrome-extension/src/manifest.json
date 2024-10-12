@@ -37,7 +37,7 @@
       "js": ["js/content.bundle.js"]
     }
   ],
-  "options_page": "html/options.html",
+  "options_page": "options/options.html",
   "host_permissions": [
     "https://func-zennit-prod-japaneast.azurewebsites.net/*",
     "https://github.com/*",
