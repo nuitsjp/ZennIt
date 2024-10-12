@@ -4,8 +4,21 @@
 
 // 共通の定数をインポート（ストレージキーなど）
 import STORAGE_KEYS from '../js/constants.js';
+import Analytics from '../google-analytics.js';
 
 console.log("Popup script started loading...");
+
+// Fire a page view event on load
+window.addEventListener('load', () => {
+  Analytics.firePageViewEvent(document.title, document.location.href);
+});
+
+// Listen globally for all button events
+document.addEventListener('click', (event) => {
+  if (event.target instanceof HTMLButtonElement) {
+    Analytics.fireEvent('click_button', { id: event.target.id });
+  }
+});
 
 // DOMの操作を簡略化するユーティリティ関数
 const $ = document.querySelector.bind(document);
@@ -188,4 +201,4 @@ document.addEventListener('DOMContentLoaded', () => {
   ui.initialize();
 });
 
-console.log("Popup script finished loading");
+console.log("Popup script loaded successfully.");
