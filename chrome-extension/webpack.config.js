@@ -40,7 +40,7 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           { from: "src/manifest.json", to: "manifest.json" },
-          { from: "src/html", to: "html" },
+          { from: "src/publish", to: "publish" },
           { from: "src/popup", to: "popup" },
           { from: "src/options", to: "options" },
           { from: "src/css", to: "css" },

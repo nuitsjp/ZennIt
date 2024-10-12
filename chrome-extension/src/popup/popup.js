@@ -185,7 +185,7 @@ class PopupUI {
   
       // 現在のアクティブタブのインデックスの1個右側に新しいタブを作成
       await chrome.tabs.create({
-        url: chrome.runtime.getURL('../html/publish.html'),
+        url: chrome.runtime.getURL('../publish/publish.html'),
         index: activeTab.index + 1 // 現在のアクティブタブの1つ右側
       });
       window.close();
