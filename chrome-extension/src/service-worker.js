@@ -1,13 +1,20 @@
-// background.js
+// service-worker.js
 // このスクリプトは、Chrome拡張機能のバックグラウンドプロセスを管理します。
 // 主な機能は、拡張機能のインストール/アップデート時の初期化と、デフォルト設定の管理です。
 
-import STORAGE_KEYS from './constants.js';
+import STORAGE_KEYS from './js/constants.js';
+import Analytics from './js/google-analytics.js';
 
 console.log("Zenn It! extension background loading...");
 
+addEventListener('unhandledrejection', async (event) => {
+  Analytics.fireErrorEvent(event.reason);
+});
+
+
 // 拡張機能のインストール時やアップデート時に実行されるリスナー
 chrome.runtime.onInstalled.addListener((details) => {
+  Analytics.fireEvent('install');
   console.log(`Zenn It! extension ${details.reason}.`);
   initializeDefaultSettings();
 });
@@ -59,7 +66,6 @@ async function loadDefaultPrompt(promptType) {
     const response = await fetch(chrome.runtime.getURL(filePath));
     const text = await response.text();
     console.log(`Default ${promptType} prompt loaded successfully.`);
-    console.log(text);
     return text;
   } catch (error) {
     console.error(`Error loading default ${promptType} prompt:`, error);

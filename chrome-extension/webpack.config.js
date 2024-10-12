@@ -1,21 +1,21 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const glob = require('glob');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
+  // エントリーポイントを動的に取得
+  const entries = glob.sync('./src/**/*.js').reduce((acc, file) => {
+    const name = path.relative('./src', file).replace(/\.js$/, '');
+    acc[name] = './' + file;
+    return acc;
+  }, {});
+
   return {
-    entry: {
-      background: './src/js/background.js',
-      constants: './src/js/constants.js',
-      content: './src/js/content.js',
-      'github-service': './src/js/github-service.js',
-      options: './src/js/options.js',
-      popup: './src/js/popup.js',
-      publish: './src/js/publish.js'
-    },
+    entry: entries,
     output: {
-      filename: 'js/[name].bundle.js',
+      filename: '[name].bundle.js', // [name]にはディレクトリパスが含まれる
       path: path.resolve(__dirname, 'dist'),
       clean: true
     },
