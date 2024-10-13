@@ -31,6 +31,7 @@ class PopupUI {
     // UIの構成要素
     this.generateSummaryBtn = $('#generateSummary');
     this.publishArticleBtn = $('#publishArticle');
+    this.openSettingsBtn = $('#openSettings'); // 設定ボタンの取得
     this.statusMessage = $('#statusMessage');
     // 許可されたURLのリスト
     this.allowedUrls = ["https://claude.ai/", "https://chatgpt.com/"];
@@ -52,6 +53,7 @@ class PopupUI {
   bindEvents() {
     this.generateSummaryBtn.addEventListener('click', () => this.generateSummary());
     this.publishArticleBtn.addEventListener('click', () => this.publish());
+    this.openSettingsBtn.addEventListener('click', () => this.openOptionsPage()); // 設定ページを開く
   }
 
   /**

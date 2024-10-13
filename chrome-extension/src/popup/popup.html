@@ -7,20 +7,23 @@
   <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body class="popup-page">
-  <h1>Zenn It!</h1>
+  <div class="header">
+    <h1>Zenn It!</h1>
+    <button id="openSettings" class="icon-button">
+      <i class="material-icons">settings</i>
+    </button>
+  </div>
 
   <button id="generateSummary" class="button">
     <i class="material-icons">summarize</i>要約
   </button>
-  
+
   <button id="publishArticle" class="button">
     <i class="material-icons">publish</i>発行
   </button>
 
-  <!-- ステータスメッセージ表示用の要素を追加 -->
   <div id="statusMessage" class="status-message" aria-live="polite"></div>
 
   <script src="popup.bundle.js"></script>
-
 </body>
 </html>
