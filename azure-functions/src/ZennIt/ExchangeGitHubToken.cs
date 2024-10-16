@@ -27,6 +27,13 @@ public class ExchangeGitHubToken(
             return badRequestResponse;
         }
 
+        if (code == "heartbeat")
+        {
+            var heartbeat = req.CreateResponse(HttpStatusCode.OK);
+            await heartbeat.WriteStringAsync("I'm awake!");
+            return heartbeat;
+        }
+
         var clientId = Environment.GetEnvironmentVariable("GitHubClientId");
         var clientSecret = Environment.GetEnvironmentVariable("GitHubClientSecret");
         if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
