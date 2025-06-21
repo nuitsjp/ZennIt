@@ -34,7 +34,7 @@ class PopupUI {
     this.openSettingsBtn = $('#openSettings'); // 設定ボタンの取得
     this.statusMessage = $('#statusMessage');
     // 許可されたURLのリスト
-    this.allowedUrls = ["https://claude.ai/", "https://chatgpt.com/"];
+    this.allowedUrls = ["https://claude.ai/", "https://chatgpt.com/", "https://gemini.google.com/"];
   }
 
   /**
