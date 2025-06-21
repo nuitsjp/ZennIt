@@ -24,7 +24,12 @@ chrome.runtime.onInstalled.addListener((details) => {
  * リポジトリ設定とプロンプトが未設定の場合、デフォルト値を設定します。
  */
 function initializeDefaultSettings() {
-  chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY, STORAGE_KEYS.PROMPT_CHATGPT, STORAGE_KEYS.PROMPT_CLAUDE], (result) => {
+  chrome.storage.sync.get([
+    STORAGE_KEYS.REPOSITORY,
+    STORAGE_KEYS.PROMPT_CHATGPT,
+    STORAGE_KEYS.PROMPT_CLAUDE,
+    STORAGE_KEYS.PROMPT_GEMINI
+  ], (result) => {
     const updates = {};
 
     // リポジトリ設定の初期化
@@ -33,25 +38,26 @@ function initializeDefaultSettings() {
       console.log("Initializing default repository setting.");
     }
 
-    // ChatGPTプロンプト設定の初期化
-    if (!result[STORAGE_KEYS.PROMPT_CHATGPT]) {
-      loadDefaultPrompt('chatgpt').then(defaultPrompt => {
-        updates[STORAGE_KEYS.PROMPT_CHATGPT] = defaultPrompt;
-        saveSettings(updates);
-      });
-    }
+    // プロンプト設定の初期化
+    const promptTypes = [
+      { key: STORAGE_KEYS.PROMPT_CHATGPT, type: 'chatgpt' },
+      { key: STORAGE_KEYS.PROMPT_CLAUDE, type: 'claude' },
+      { key: STORAGE_KEYS.PROMPT_GEMINI, type: 'gemini' }
+    ];
+    const promises = promptTypes.map(item => {
+      if (!result[item.key]) {
+        return loadDefaultPrompt(item.type).then(defaultPrompt => {
+          updates[item.key] = defaultPrompt;
+        });
+      }
+      return Promise.resolve();
+    });
 
-    // Claudeプロンプト設定の初期化
-    if (!result[STORAGE_KEYS.PROMPT_CLAUDE]) {
-      loadDefaultPrompt('claude').then(defaultPrompt => {
-        updates[STORAGE_KEYS.PROMPT_CLAUDE] = defaultPrompt;
+    Promise.all(promises).then(() => {
+      if (Object.keys(updates).length > 0) {
         saveSettings(updates);
-      });
-    }
-
-    if (Object.keys(updates).length > 0) {
-      saveSettings(updates);
-    }
+      }
+    });
   });
 }
 
