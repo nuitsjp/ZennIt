@@ -132,7 +132,8 @@ class PopupUI {
         throw new Error("アクティブなタブが見つかりません");
       }
 
-      await chrome.tabs.sendMessage(tabs[0].id, {action: 'generateSummary'});
+      const message = {action: 'generateSummary'};
+      await chrome.tabs.sendMessage(tabs[0].id, message);
       window.close();
     } catch (error) {
       console.error("要約生成中にエラーが発生しました:", error);
