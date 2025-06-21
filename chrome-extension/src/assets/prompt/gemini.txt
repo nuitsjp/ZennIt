@@ -1,0 +1,40 @@
+ここまでの内容を簡潔なMarkdown形式のブログにまとめます。Artifactsとして作成してください。
+具体的な記述例を以下にします。
+
+記述例:
+2024-09-30-install-powershell-module-system-wide.md
+---
+title: "PowerShellモジュールをシステム全体にインストールする方法"
+emoji: "🌟"
+type: "tech"
+topics: [powershell, windows]
+published: true
+---
+
+# PowerShellモジュールをシステム全体にインストールする方法
+
+PowerShellモジュールをシステム全体で利用可能にするための手順について説明します。
+
+## 概要
+
+PowerShellモジュールは通常、ユーザー固有の場所にインストールされますが、システム全体で利用したい場合は管理者権限でインストールする必要があります。
+
+## 手順
+
+### 1. 管理者権限でPowerShellを起動
+
+```powershell
+# 管理者としてPowerShellを開く
+Start-Process PowerShell -Verb RunAs
+```
+
+### 2. インストールスコープを指定してモジュールをインストール
+
+```powershell
+# システム全体にインストール
+Install-Module -Name ModuleName -Scope AllUsers
+```
+
+## まとめ
+
+この方法により、すべてのユーザーがモジュールを利用できるようになります。

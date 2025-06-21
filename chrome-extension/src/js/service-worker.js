@@ -21,10 +21,10 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 /**
  * デフォルト設定を初期化する関数
- * リポジトリ設定とプロンプトが未設定の場合、デフォルト値を設定します。
+ * リポジトリ設定が未設定の場合、デフォルト値を設定します。
  */
 function initializeDefaultSettings() {
-  chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY, STORAGE_KEYS.PROMPT_CHATGPT, STORAGE_KEYS.PROMPT_CLAUDE], (result) => {
+  chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY], (result) => {
     const updates = {};
 
     // リポジトリ設定の初期化
@@ -33,44 +33,10 @@ function initializeDefaultSettings() {
       console.log("Initializing default repository setting.");
     }
 
-    // ChatGPTプロンプト設定の初期化
-    if (!result[STORAGE_KEYS.PROMPT_CHATGPT]) {
-      loadDefaultPrompt('chatgpt').then(defaultPrompt => {
-        updates[STORAGE_KEYS.PROMPT_CHATGPT] = defaultPrompt;
-        saveSettings(updates);
-      });
-    }
-
-    // Claudeプロンプト設定の初期化
-    if (!result[STORAGE_KEYS.PROMPT_CLAUDE]) {
-      loadDefaultPrompt('claude').then(defaultPrompt => {
-        updates[STORAGE_KEYS.PROMPT_CLAUDE] = defaultPrompt;
-        saveSettings(updates);
-      });
-    }
-
     if (Object.keys(updates).length > 0) {
       saveSettings(updates);
     }
   });
-}
-
-/**
- * デフォルトのプロンプトテキストを読み込む非同期関数
- * @param {string} promptType プロンプトの種類 ('chatgpt' または 'claude')
- * @returns {Promise<string>} デフォルトのプロンプトテキスト
- */
-async function loadDefaultPrompt(promptType) {
-  try {
-    const filePath = `assets/prompt/${promptType}.txt`;
-    const response = await fetch(chrome.runtime.getURL(filePath));
-    const text = await response.text();
-    console.log(`Default ${promptType} prompt loaded successfully.`);
-    return text;
-  } catch (error) {
-    console.error(`Error loading default ${promptType} prompt:`, error);
-    return ""; // エラー時は空文字列を返す
-  }
 }
 
 /**
