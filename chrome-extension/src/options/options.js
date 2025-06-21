@@ -35,7 +35,13 @@ const SettingsManager = {
    */
   async load() {
     try {
-      const data = await chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY, STORAGE_KEYS.PROMPT_CHATGPT, STORAGE_KEYS.PROMPT_CLAUDE, STORAGE_KEYS.PROMPT_GEMINI]);
+      const data = await chrome.storage.sync.get([
+        STORAGE_KEYS.REPOSITORY,
+        STORAGE_KEYS.PROMPT_CHATGPT,
+        STORAGE_KEYS.PROMPT_CLAUDE,
+        STORAGE_KEYS.PROMPT_GEMINI
+      ]);
+      console.log('load() storage data:', data); // デバッグ用
       return {
         repository: data[STORAGE_KEYS.REPOSITORY] || '',
         promptChatGPT: data[STORAGE_KEYS.PROMPT_CHATGPT] || '',
@@ -58,6 +64,7 @@ const SettingsManager = {
    */
   async save(repository, promptChatGPT, promptClaude, promptGemini) {
     try {
+      console.log('save() values:', {repository, promptChatGPT, promptClaude, promptGemini}); // デバッグ用
       await chrome.storage.sync.set({
         [STORAGE_KEYS.REPOSITORY]: repository.trim(),
         [STORAGE_KEYS.PROMPT_CHATGPT]: promptChatGPT.trim(),
