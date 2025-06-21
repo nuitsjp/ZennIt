@@ -62,10 +62,15 @@ class PublishUI {
    */
   async readClipboard() {
     try {
-      const text = await navigator.clipboard.readText();
+      let text = await navigator.clipboard.readText();
       if (text) {
-        const lines = text.split('\n');
-        if (lines[0].startsWith('---')) {
+        let lines = text.split('\n');
+        if (lines[0].startsWith('````text')) {
+          // 先頭が````textなら先頭と最終行を削除
+          lines = lines.slice(1, -1);
+          text = lines.join('\n');
+        }
+        if (lines[0] && lines[0].startsWith('---')) {
           // Markdownフロントマターがある場合、全てを記事本文として扱う
           this.title.value = '';
           this.article.value = text;
