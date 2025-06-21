@@ -3,7 +3,8 @@
 // 
 // サポートされているプラットフォーム:
 // - Claude (claude.ai)
-// - ChatGPT (chat.openai.com および他のプラットフォーム - デフォルト)
+// - ChatGPT (chatgpt.com および他のプラットフォーム - デフォルト)
+// - Gemini (gemini.google.com)
 //
 // 新しいプラットフォーム追加方法:
 // 1. getPlatformType() 関数に新しいプラットフォームの判定を追加
@@ -32,11 +33,14 @@ function debugLog(message) {
 /**
  * URLからプラットフォームタイプを判定する関数
  * @param {string} currentURL - 現在のURL
- * @returns {string} プラットフォーム名 ('claude' | 'chatgpt')
+ * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini')
  */
 function getPlatformType(currentURL) {
   if (currentURL.includes("claude.ai")) {
     return 'claude';
+  }
+  if (currentURL.includes("gemini.google.com")) {
+    return 'gemini';
   }
   return 'chatgpt';
 }
@@ -50,6 +54,8 @@ function getInputSelector(platform) {
   switch (platform) {
     case 'claude':
       return 'div[contenteditable="true"]';
+    case 'gemini':
+      return 'input-area-v2 .ql-editor[role="textbox"]';
     case 'chatgpt':
     default:
       return '#prompt-textarea';
@@ -65,6 +71,8 @@ function getPromptKey(platform) {
   switch (platform) {
     case 'claude':
       return STORAGE_KEYS.PROMPT_CLAUDE;
+    case 'gemini':
+      return STORAGE_KEYS.PROMPT_GEMINI;
     case 'chatgpt':
     default:
       return STORAGE_KEYS.PROMPT_CHATGPT;
@@ -140,7 +148,7 @@ async function inputPrompt(inputArea) {
   debugLog("Inputting prompt");
   
   try {
-    const data = await new Promise((resolve) => chrome.storage.sync.get([STORAGE_KEYS.PROMPT_CHATGPT, STORAGE_KEYS.PROMPT_CLAUDE], resolve));
+    const data = await new Promise((resolve) => chrome.storage.sync.get([STORAGE_KEYS.PROMPT_CHATGPT, STORAGE_KEYS.PROMPT_CLAUDE, STORAGE_KEYS.PROMPT_GEMINI], resolve));
     const currentURL = window.location.href;
     const platform = getPlatformType(currentURL);
     const promptKey = getPromptKey(platform);
