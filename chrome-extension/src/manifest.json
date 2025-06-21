@@ -13,6 +13,7 @@
     "resources": [
       "assets/prompt/chatgpt.txt",
       "assets/prompt/claude.txt",
+      "assets/prompt/gemini.txt",
       "assets/json/config.json",
       "js/constants.bundle.js"
     ],
