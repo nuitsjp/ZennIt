@@ -138,7 +138,8 @@ class OptionsUI {
   /**
    * イベントリスナーを設定
    */
-  bindEvents() {    this.repository.addEventListener('input', () => this.validateInputs());
+  bindEvents() {    
+    this.repository.addEventListener('input', () => this.validateInputs());
     this.promptChatGPT.addEventListener('input', () => this.validateInputs());
     this.promptClaude.addEventListener('input', () => this.validateInputs());
     this.promptGemini.addEventListener('input', () => this.validateInputs());
