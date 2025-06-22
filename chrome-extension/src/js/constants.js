@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
   PROMPT_CHATGPT: 'promptChatGPT',
   PROMPT_CLAUDE: 'promptClaude',
   PROMPT_GEMINI: 'promptGemini',
+  PROMPT_COPILOT: 'promptCopilot',
   TOKEN: 'github_token'
 };
 

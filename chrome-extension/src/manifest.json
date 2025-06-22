@@ -14,13 +14,15 @@
       "assets/prompt/chatgpt.txt",
       "assets/prompt/claude.txt",
       "assets/prompt/gemini.txt",
+      "assets/prompt/copilot.txt",
       "assets/json/config.json",
       "js/constants.bundle.js"
     ],
     "matches": [
       "https://claude.ai/*",
       "https://chatgpt.com/*",
-      "https://gemini.google.com/*"
+      "https://gemini.google.com/*",
+      "https://github.com/*"
     ]
   }],
   "action": {
@@ -35,7 +37,8 @@
       "matches": [
         "https://claude.ai/*",
         "https://chatgpt.com/*",
-        "https://gemini.google.com/*"
+        "https://gemini.google.com/*",
+        "https://github.com/copilot*"
       ],
       "js": ["js/content.bundle.js"]
     }
