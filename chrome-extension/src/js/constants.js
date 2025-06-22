@@ -6,15 +6,15 @@ const STORAGE_KEYS = {
   TOKEN: 'github_token'
 };
 
-// サービス名とストレージキーのマッピング
-const SERVICE_STORAGE_KEYS = {
-  chatgpt: 'promptChatGPT',
-  claude: 'promptClaude', 
-  gemini: 'promptGemini',
-  githubcopilot: 'promptGitHubCopilot',
-  mscopilot: 'promptMSCopilot'
+// サービス名
+const SERVICE_NAMES = {
+  CHATGPT: 'chatgpt',
+  CLAUDE: 'claude',
+  GEMINI: 'gemini',
+  GITHUB_COPILOT: 'githubcopilot',
+  MICROSOFT_COPILOT: 'microsoftcopilot'
 };
 
 // このファイルを他のスクリプトで利用できるようにする
 export default STORAGE_KEYS;
-export { SERVICE_STORAGE_KEYS };
+export { SERVICE_NAMES };

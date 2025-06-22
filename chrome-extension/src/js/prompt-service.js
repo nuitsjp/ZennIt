@@ -2,7 +2,6 @@
 // 統一プロンプト取得サービス
 // ストレージとassetsフォルダからのプロンプト取得を一本化
 
-import STORAGE_KEYS, { SERVICE_STORAGE_KEYS } from './constants.js';
 
 /**
  * assetsフォルダからプロンプトを読み込む
@@ -33,11 +32,7 @@ async function loadFromAssets(serviceName) {
  */
 async function cacheToStorage(serviceName, promptText) {
   try {
-    const storageKey = SERVICE_STORAGE_KEYS[serviceName];
-    if (!storageKey) {
-      throw new Error(`Unsupported service: ${serviceName}`);
-    }
-    await chrome.storage.sync.set({ [storageKey]: promptText });
+    await chrome.storage.sync.set({ [serviceName]: promptText });
     console.log(`Prompt cached to storage: ${serviceName}`);
   } catch (error) {
     console.error(`Error caching prompt to storage (${serviceName}):`, error);
@@ -47,34 +42,26 @@ async function cacheToStorage(serviceName, promptText) {
 /**
  * 統一プロンプト取得関数
  * ストレージに存在すればそれを返し、存在しなければassetsから読み込んでキャッシュ
- * @param {string} serviceName - サービス名 ('chatgpt' | 'claude' | 'gemini' | 'githubcopilot' | 'mscopilot')
+ * @param {string} serviceName - サービス名
  * @param {boolean} forceReload - 強制的にassetsから再読み込みするかどうか
  * @returns {Promise<string>} プロンプトテキスト
  */
 export async function getPrompt(serviceName, forceReload = false) {
   try {
-    const storageKey = SERVICE_STORAGE_KEYS[serviceName];
-    if (!storageKey) {
-      throw new Error(`Unsupported service: ${serviceName}`);
-    }
-    
     // 強制リロードでない場合、まずストレージをチェック
     if (!forceReload) {
-      const result = await chrome.storage.sync.get([storageKey]);
-      if (result[storageKey]) {
+      const result = await chrome.storage.sync.get([serviceName]);
+      if (result[serviceName]) {
         console.log(`Prompt retrieved from storage: ${serviceName}`);
-        return result[storageKey];
+        return result[serviceName];
       }
     }
-    
     // ストレージに存在しないか、強制リロードの場合はassetsから読み込み
     const promptText = await loadFromAssets(serviceName);
-    
     // 読み込んだプロンプトをストレージにキャッシュ
     if (promptText) {
       await cacheToStorage(serviceName, promptText);
     }
-    
     return promptText;
   } catch (error) {
     console.error(`Error in getPrompt (${serviceName}):`, error);
