@@ -22,11 +22,11 @@ const INPUT_DELAY = 50; // 入力後の遅延時間（ミリ秒）
 console.log("Zenn It! content script loaded");
 
 /**
- * URLからプラットフォームタイプを判定する関数
+ * URLからサービス名を判定する関数
  * @param {string} currentURL - 現在のURL
  * @returns {string} サービス名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot' | 'mscopilot')
  */
-function getPlatformType(currentURL) {
+function getServiceName(currentURL) {
   if (currentURL.includes("claude.ai")) {
     return SERVICE_NAMES.CLAUDE;
   }
@@ -87,7 +87,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function generateSummary() {
   try {
     const currentURL = window.location.href;
-    const serviceName = getPlatformType(currentURL);
+    const serviceName = getServiceName(currentURL);
     const path = getInputSelector(serviceName);
     const inputElement = await waitForElement(path);
     await inputPrompt(inputElement);
@@ -123,7 +123,7 @@ function waitForElement(selector) {
 async function inputPrompt(inputArea) {
   try {
     const currentURL = window.location.href;
-    const serviceName = getPlatformType(currentURL);
+    const serviceName = getServiceName(currentURL);
     const promptText = await getPrompt(serviceName);
     await simulateTyping(inputArea, promptText);
   } catch (error) {
