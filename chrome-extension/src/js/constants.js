@@ -48,6 +48,9 @@ const SERVICES = {
     if (currentURL.includes("copilot.cloud.microsoft")) {
       return this.MICROSOFT_COPILOT;
     }
+    if (currentURL.includes("m365.cloud.microsoft/chat")) {
+      return this.MICROSOFT_COPILOT;
+    }
     return this.CHATGPT;
   }
 };

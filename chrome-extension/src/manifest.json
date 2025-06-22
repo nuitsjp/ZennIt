@@ -24,7 +24,8 @@
       "https://chatgpt.com/*",
       "https://gemini.google.com/*",
       "https://github.com/*",
-      "https://copilot.cloud.microsoft/*"
+      "https://copilot.cloud.microsoft/*",
+      "https://m365.cloud.microsoft/*"
     ]
   }],
   "action": {
@@ -41,7 +42,8 @@
         "https://chatgpt.com/*",
         "https://gemini.google.com/*",
         "https://github.com/*",
-        "https://copilot.cloud.microsoft/*"
+        "https://copilot.cloud.microsoft/*",
+        "https://m365.cloud.microsoft/*"
       ],
       "js": ["js/content.bundle.js"]
     }
@@ -50,8 +52,7 @@
   "host_permissions": [
     "https://func-zennit-prod-japaneast.azurewebsites.net/*",
     "https://github.com/*",
-    "https://api.github.com/*",
-    "https://copilot.cloud.microsoft/*"
+    "https://api.github.com/*"
   ],
   "icons": {
     "16": "assets/icons/icon16.png",
