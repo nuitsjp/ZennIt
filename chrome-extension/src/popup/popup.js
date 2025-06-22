@@ -38,7 +38,8 @@ class PopupUI {
       "https://claude.ai/", 
       "https://chatgpt.com/", 
       "https://gemini.google.com/",
-      "https://github.com/copilot"
+      "https://github.com/copilot",
+      "https://copilot.cloud.microsoft/"
     ];
   }
 
