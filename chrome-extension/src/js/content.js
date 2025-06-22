@@ -22,33 +22,12 @@ const INPUT_DELAY = 50; // 入力後の遅延時間（ミリ秒）
 console.log("Zenn It! content script loaded");
 
 /**
- * URLからサービス名を判定する関数
- * @param {string} currentURL - 現在のURL
- * @returns {string} サービス名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot' | 'mscopilot')
- */
-function getServiceName(currentURL) {
-  if (currentURL.includes("claude.ai")) {
-    return SERVICES.CLAUDE.id;
-  }
-  if (currentURL.includes("gemini.google.com")) {
-    return SERVICES.GEMINI.id;
-  }
-  if (currentURL.includes("github.com/copilot")) {
-    return SERVICES.GITHUB_COPILOT.id;
-  }
-  if (currentURL.includes("copilot.cloud.microsoft")) {
-    return SERVICES.MICROSOFT_COPILOT.id;
-  }
-  return SERVICES.CHATGPT.id;
-}
-
-/**
  * プラットフォームに応じた入力要素のセレクタを取得する関数
- * @param {string} serviceName - サービス名
+ * @param {Object} service - サービスオブジェクト
  * @returns {string} CSSセレクタ
  */
-function getInputSelector(serviceName) {
-  switch (serviceName) {
+function getInputSelector(service) {
+  switch (service.id) {
     case SERVICES.CLAUDE.id:
       return 'div[contenteditable="true"]';
     case SERVICES.GEMINI.id:
@@ -87,10 +66,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function generateSummary() {
   try {
     const currentURL = window.location.href;
-    const serviceName = getServiceName(currentURL);
-    const path = getInputSelector(serviceName);
+    const service = SERVICES.getService(currentURL);
+    const path = getInputSelector(service);
     const inputElement = await waitForElement(path);
-    await inputPrompt(inputElement);
+    await inputPrompt(inputElement, service);
     await pressEnter(inputElement);
   } catch (error) {
     throw error;
@@ -119,12 +98,11 @@ function waitForElement(selector) {
 /**
  * プロンプトを入力エリアに入力する関数
  * @param {Element} inputArea - 入力エリアの要素
+ * @param {Object} service - サービスオブジェクト
  */
-async function inputPrompt(inputArea) {
+async function inputPrompt(inputArea, service) {
   try {
-    const currentURL = window.location.href;
-    const serviceName = getServiceName(currentURL);
-    const promptText = await getPrompt(serviceName);
+    const promptText = await getPrompt(service.id);
     await simulateTyping(inputArea, promptText);
   } catch (error) {
     throw error;
