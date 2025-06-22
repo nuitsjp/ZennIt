@@ -37,7 +37,7 @@ const SettingsManager = {
   async load() {
     try {
       // リポジトリのみストレージから直接取得
-      const data = await chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY]);
+      const data = await chrome.storage.sync.get(STORAGE_KEYS.REPOSITORY);
       
       // プロンプトは全てgetPromptで取得（ストレージ→assetsの順で自動取得）
       const promptChatGPT = await getPrompt(SERVICES.CHATGPT.id);
