@@ -37,7 +37,22 @@ const SettingsManager = {
   async load() {
     try {
       // 動的にストレージキーを構築
-      const storageKeys = [STORAGE_KEYS.REPOSITORY, ...Object.values(SERVICES).map(service => service.id)];
+      const serviceKeys = Object.values(SERVICES)
+        .map(service => service?.id)
+        .filter(id => id && typeof id === 'string'); // undefined や無効な値を除外
+      
+      const storageKeys = [STORAGE_KEYS.REPOSITORY, ...serviceKeys];
+      
+      // デバッグ用ログ
+      console.log('SERVICES:', SERVICES);
+      console.log('serviceKeys:', serviceKeys);
+      console.log('storageKeys:', storageKeys);
+      
+      // ストレージキーの妥当性チェック
+      if (!Array.isArray(storageKeys) || storageKeys.some(key => typeof key !== 'string' || !key)) {
+        throw new Error('Invalid storage keys detected');
+      }
+      
       const data = await chrome.storage.sync.get(storageKeys);
       console.log('load() storage data:', data); // デバッグ用
       
