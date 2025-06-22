@@ -44,8 +44,8 @@ function getPlatformType(currentURL) {
   if (currentURL.includes("gemini.google.com")) {
     return 'gemini';
   }
-  if (currentURL.includes("github.com/githubcopilot")) {
-    return 'githubcopilot';
+  if (currentURL.includes("github.com/copilot")) {
+    return 'copilot';
   }
   return 'chatgpt';
 }
