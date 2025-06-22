@@ -38,7 +38,7 @@
         "https://claude.ai/*",
         "https://chatgpt.com/*",
         "https://gemini.google.com/*",
-        "https://github.com/copilot*"
+        "https://github.com/*"
       ],
       "js": ["js/content.bundle.js"]
     }

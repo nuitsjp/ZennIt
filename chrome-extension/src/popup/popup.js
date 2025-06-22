@@ -134,11 +134,12 @@ class PopupUI {
     try {
       const tabs = await chrome.tabs.query({active: true, currentWindow: true});
       if (!tabs || tabs.length === 0) {
+        console.error('[Popup] No active tab found');
         throw new Error("アクティブなタブが見つかりません");
       }
 
       const message = {action: 'generateSummary'};
-      await chrome.tabs.sendMessage(tabs[0].id, message);
+      const response = await chrome.tabs.sendMessage(tabs[0].id, message);
       window.close();
     } catch (error) {
       console.error("要約生成中にエラーが発生しました:", error);

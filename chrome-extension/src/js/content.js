@@ -23,16 +23,6 @@ const DEBUG = true; // デバッグモードの制御
 console.log("Zenn It! content script loaded");
 
 /**
- * デバッグメッセージをコンソールに出力する関数
- * @param {string} message - ログメッセージ
- */
-function debugLog(message) {
-  if (DEBUG) {
-    console.log(`Content script: ${message}`);
-  }
-}
-
-/**
  * URLからプラットフォームタイプを判定する関数
  * @param {string} currentURL - 現在のURL
  * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot')
@@ -45,7 +35,7 @@ function getPlatformType(currentURL) {
     return 'gemini';
   }
   if (currentURL.includes("github.com/copilot")) {
-    return 'copilot';
+    return 'githubcopilot';
   }
   return 'chatgpt';
 }
@@ -62,25 +52,24 @@ function getInputSelector(platform) {
     case 'gemini':
       return 'input-area-v2 .ql-editor[role="textbox"]';
     case 'githubcopilot':
-      return '#copilot-chat-textarea textarea';
+      return '#copilot-chat-textarea';
     case 'chatgpt':
     default:
       return '#prompt-textarea';
   }
 }
 
-
 /**
  * Chrome拡張機能からのメッセージを処理するリスナー
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  debugLog(`Message received: ${JSON.stringify(request)}`);
-  
+  console.log('[Content] onMessage received:', request, sender);
   if (request.action === "generateSummary") {
     generateSummary()
-      .then(() => sendResponse({ success: true }))
+      .then(() => {
+        sendResponse({ success: true });
+      })
       .catch(error => {
-        debugLog(`Error in generateSummary: ${error.message}`);
         sendResponse({ success: false, error: error.message });
       });
     return true; // 非同期レスポンスを示すために true を返す
@@ -93,18 +82,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
  */
 async function generateSummary() {
   try {
-    debugLog("Determining platform...");
     const currentURL = window.location.href;
     const platform = getPlatformType(currentURL);
     const path = getInputSelector(platform);
-
-    debugLog(`Waiting for input element. Platform: ${platform}, Path: ${path}`);
     const inputElement = await waitForElement(path);
-    debugLog(`Input element found. Element: ${inputElement}`);
     await inputPrompt(inputElement);
     await pressEnter(inputElement);
   } catch (error) {
-    debugLog(`Error in generateSummary: ${error.message}`);
     throw error;
   }
 }
@@ -116,14 +100,11 @@ async function generateSummary() {
  */
 function waitForElement(selector) {
   return new Promise((resolve) => {
-    debugLog(`Starting waitForElement for: ${selector}`);
     const checkElement = () => {
       const element = document.querySelector(selector);
       if (element) {
-        debugLog("Element found");
         resolve(element);
       } else {
-        debugLog(`Element not found, retrying in ${RETRY_INTERVAL}ms`);
         setTimeout(checkElement, RETRY_INTERVAL);
       }
     };
@@ -136,17 +117,12 @@ function waitForElement(selector) {
  * @param {Element} inputArea - 入力エリアの要素
  */
 async function inputPrompt(inputArea) {
-  debugLog("Inputting prompt");
-  
   try {
     const currentURL = window.location.href;
     const platform = getPlatformType(currentURL);
     const promptText = await getPrompt(platform);
-    
     await simulateTyping(inputArea, promptText);
-    debugLog("Prompt inputted");
   } catch (error) {
-    debugLog(`Error in inputPrompt: ${error.message}`);
     throw error;
   }
 }
@@ -157,14 +133,26 @@ async function inputPrompt(inputArea) {
  * @param {string} text - 入力するテキスト
  */
 async function simulateTyping(element, text) {
-  element.textContent += text;
-  const event = new InputEvent('input', {
-    inputType: 'insertText',
-    data: text,
-    bubbles: true,
-    cancelable: true,
-  });
-  element.dispatchEvent(event);
+  // textareaの場合はvalueを使う
+  if (element.tagName === 'TEXTAREA') {
+    element.value += text;
+    const event = new InputEvent('input', {
+      inputType: 'insertText',
+      data: text,
+      bubbles: true,
+      cancelable: true,
+    });
+    element.dispatchEvent(event);
+  } else {
+    element.textContent += text;
+    const event = new InputEvent('input', {
+      inputType: 'insertText',
+      data: text,
+      bubbles: true,
+      cancelable: true,
+    });
+    element.dispatchEvent(event);
+  }
   await new Promise(resolve => setTimeout(resolve, INPUT_DELAY));
 }
 
