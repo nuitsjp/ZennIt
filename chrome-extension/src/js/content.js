@@ -12,6 +12,7 @@
 // 3. getPromptKey() 関数に新しいプラットフォームのプロンプトキーを追加
 
 import STORAGE_KEYS from './constants.js';
+import { getPrompt } from './prompt-service.js';
 
 // 定数定義
 const RETRY_INTERVAL = 500; // 要素を再チェックする間隔（ミリ秒）
@@ -62,22 +63,6 @@ function getInputSelector(platform) {
   }
 }
 
-/**
- * プラットフォームに応じたプロンプトのストレージキーを取得する関数
- * @param {string} platform - プラットフォーム名
- * @returns {string} ストレージキー
- */
-function getPromptKey(platform) {
-  switch (platform) {
-    case 'claude':
-      return STORAGE_KEYS.PROMPT_CLAUDE;
-    case 'gemini':
-      return STORAGE_KEYS.PROMPT_GEMINI;
-    case 'chatgpt':
-    default:
-      return STORAGE_KEYS.PROMPT_CHATGPT;
-  }
-}
 
 /**
  * Chrome拡張機能からのメッセージを処理するリスナー
@@ -148,11 +133,9 @@ async function inputPrompt(inputArea) {
   debugLog("Inputting prompt");
   
   try {
-    const data = await new Promise((resolve) => chrome.storage.sync.get([STORAGE_KEYS.PROMPT_CHATGPT, STORAGE_KEYS.PROMPT_CLAUDE, STORAGE_KEYS.PROMPT_GEMINI], resolve));
     const currentURL = window.location.href;
     const platform = getPlatformType(currentURL);
-    const promptKey = getPromptKey(platform);
-    let promptText = data[promptKey];
+    const promptText = await getPrompt(platform);
     
     await simulateTyping(inputArea, promptText);
     debugLog("Prompt inputted");

@@ -3,6 +3,7 @@
 // 定数ファイルからストレージキーをインポート
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
+import { getPrompt } from '../js/prompt-service.js';
 
 // グローバル定数定義
 const FEEDBACK_DURATION = 3000; // フィードバック表示時間（ミリ秒）
@@ -42,11 +43,17 @@ const SettingsManager = {
         STORAGE_KEYS.PROMPT_GEMINI
       ]);
       console.log('load() storage data:', data); // デバッグ用
+      
+      // ストレージに保存されている値を優先し、ない場合はデフォルトプロンプトを取得
+      const promptChatGPT = data[STORAGE_KEYS.PROMPT_CHATGPT] || await getPrompt('chatgpt');
+      const promptClaude = data[STORAGE_KEYS.PROMPT_CLAUDE] || await getPrompt('claude');
+      const promptGemini = data[STORAGE_KEYS.PROMPT_GEMINI] || await getPrompt('gemini');
+      
       return {
         repository: data[STORAGE_KEYS.REPOSITORY] || '',
-        promptChatGPT: data[STORAGE_KEYS.PROMPT_CHATGPT] || '',
-        promptClaude: data[STORAGE_KEYS.PROMPT_CLAUDE] || '',
-        promptGemini: data[STORAGE_KEYS.PROMPT_GEMINI] || ''
+        promptChatGPT,
+        promptClaude,
+        promptGemini
       };
     } catch (error) {
       console.error('設定の読み込み中にエラーが発生しました:', error);
