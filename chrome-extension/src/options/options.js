@@ -240,8 +240,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 console.log("Options script loaded successfully.");
-  const ui = new OptionsUI();
-  await ui.initialize();
-});
-
-console.log("Options script loaded successfully.");
