@@ -5,6 +5,7 @@
 // 共通の定数をインポート（ストレージキーなど）
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
+import StorageService from '../js/storage-service.js';
 
 console.log("Popup script started loading...");
 
@@ -79,11 +80,13 @@ class PopupUI {
    * @returns {Promise<boolean>} 要約生成中の場合はtrue、そうでない場合はfalse
    */
   async isGeneratingSummary() {
-    return new Promise(resolve => {
-      chrome.storage.local.get(STORAGE_KEYS.IS_GENERATING, data => {
-        resolve(data[STORAGE_KEYS.IS_GENERATING] || false);
-      });
-    });
+    try {
+      const result = await StorageService.get(STORAGE_KEYS.IS_GENERATING, 'local');
+      return result[STORAGE_KEYS.IS_GENERATING] || false;
+    } catch (error) {
+      console.error('Error checking generation status:', error);
+      return false;
+    }
   }
 
   /**
@@ -157,8 +160,8 @@ class PopupUI {
   async publish() {
     this.clearStatus();
     try {
-      const data = await chrome.storage.sync.get(STORAGE_KEYS.REPOSITORY);
-      if (!data[STORAGE_KEYS.REPOSITORY]) {
+      const repository = await StorageService.getRepository();
+      if (!repository) {
         this.showStatus("リポジトリが設定されていません", true);
         await this.openOptionsPage();
       } else {
