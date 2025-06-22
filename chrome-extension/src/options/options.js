@@ -41,7 +41,7 @@ const SettingsManager = {
         STORAGE_KEYS.PROMPT_CHATGPT,
         STORAGE_KEYS.PROMPT_CLAUDE,
         STORAGE_KEYS.PROMPT_GEMINI,
-        STORAGE_KEYS.PROMPT_COPILOT
+        STORAGE_KEYS.PROMPT_GITHUBCOPILOT
       ]);
       console.log('load() storage data:', data); // デバッグ用
       
@@ -49,14 +49,14 @@ const SettingsManager = {
       const promptChatGPT = data[STORAGE_KEYS.PROMPT_CHATGPT] || await getPrompt('chatgpt');
       const promptClaude = data[STORAGE_KEYS.PROMPT_CLAUDE] || await getPrompt('claude');
       const promptGemini = data[STORAGE_KEYS.PROMPT_GEMINI] || await getPrompt('gemini');
-      const promptCopilot = data[STORAGE_KEYS.PROMPT_COPILOT] || await getPrompt('copilot');
+      const promptGitHubCopilot = data[STORAGE_KEYS.PROMPT_GITHUBCOPILOT] || await getPrompt('githubcopilot');
       
       return {
         repository: data[STORAGE_KEYS.REPOSITORY] || '',
         promptChatGPT,
         promptClaude,
         promptGemini,
-        promptCopilot
+        promptGitHubCopilot
       };
     } catch (error) {
       console.error('設定の読み込み中にエラーが発生しました:', error);
@@ -70,18 +70,17 @@ const SettingsManager = {
    * @param {string} promptChatGPT ChatGPT用のプロンプト設定
    * @param {string} promptClaude Claude用のプロンプト設定
    * @param {string} promptGemini Gemini用のプロンプト設定
-   * @param {string} promptCopilot Copilot用のプロンプト設定
+   * @param {string} promptGitHubCopilot Copilot用のプロンプト設定
    * @returns {Promise<void>}
    */
-  async save(repository, promptChatGPT, promptClaude, promptGemini, promptCopilot) {
+  async save(repository, promptChatGPT, promptClaude, promptGemini, promptGitHubCopilot) {
     try {
-      console.log('save() values:', {repository, promptChatGPT, promptClaude, promptGemini, promptCopilot}); // デバッグ用
       await chrome.storage.sync.set({
         [STORAGE_KEYS.REPOSITORY]: repository.trim(),
         [STORAGE_KEYS.PROMPT_CHATGPT]: promptChatGPT.trim(),
         [STORAGE_KEYS.PROMPT_CLAUDE]: promptClaude.trim(),
         [STORAGE_KEYS.PROMPT_GEMINI]: promptGemini.trim(),
-        [STORAGE_KEYS.PROMPT_COPILOT]: promptCopilot.trim()
+        [STORAGE_KEYS.PROMPT_GITHUBCOPILOT]: promptGitHubCopilot.trim()
       });
       console.log('設定が保存されました');
     } catch (error) {
@@ -101,13 +100,13 @@ class OptionsUI {
     this.promptChatGPT = $('#promptChatGPT');
     this.promptClaude = $('#promptClaude');
     this.promptGemini = $('#promptGemini');
-    this.promptCopilot = $('#promptCopilot');
+    this.promptGitHubCopilot = $('#promptGitHubCopilot');
     this.saveButton = $('#save');
     this.repositoryError = $('#repositoryError');
     this.promptChatGPTError = $('#promptChatGPTError');
     this.promptClaudeError = $('#promptClaudeError');
     this.promptGeminiError = $('#promptGeminiError');
-    this.promptCopilotError = $('#promptCopilotError');
+    this.promptGitHubCopilotError = $('#promptGitHubCopilotError');
     this.feedbackElement = this.createFeedbackElement();
 
     this.bindEvents();
@@ -143,7 +142,7 @@ class OptionsUI {
     this.promptChatGPT.addEventListener('input', () => this.validateInputs());
     this.promptClaude.addEventListener('input', () => this.validateInputs());
     this.promptGemini.addEventListener('input', () => this.validateInputs());
-    this.promptCopilot.addEventListener('input', () => this.validateInputs());
+    this.promptGitHubCopilot.addEventListener('input', () => this.validateInputs());
     this.saveButton.addEventListener('click', () => this.save());
 
     document.querySelectorAll('.tab-button').forEach(button => {
@@ -160,8 +159,8 @@ class OptionsUI {
     const isPromptChatGPTValid = this.validateField(this.promptChatGPT, this.promptChatGPTError);
     const isPromptClaudeValid = this.validateField(this.promptClaude, this.promptClaudeError);
     const isPromptGeminiValid = this.validateField(this.promptGemini, this.promptGeminiError);
-    const isPromptCopilotValid = this.validateField(this.promptCopilot, this.promptCopilotError);
-    const isValid = isRepositoryValid && isPromptChatGPTValid && isPromptClaudeValid && isPromptGeminiValid && isPromptCopilotValid;
+    const isPromptGitHubCopilotValid = this.validateField(this.promptGitHubCopilot, this.promptGitHubCopilotError);
+    const isValid = isRepositoryValid && isPromptChatGPTValid && isPromptClaudeValid && isPromptGeminiValid && isPromptGitHubCopilotValid;
 
     this.saveButton.disabled = !isValid;
     return isValid;
@@ -203,7 +202,7 @@ class OptionsUI {
   async save() {
     if (this.validateInputs()) {
       try {
-        await SettingsManager.save(this.repository.value, this.promptChatGPT.value, this.promptClaude.value, this.promptGemini.value, this.promptCopilot.value);
+        await SettingsManager.save(this.repository.value, this.promptChatGPT.value, this.promptClaude.value, this.promptGemini.value, this.promptGitHubCopilot.value);
         this.showFeedback('設定が保存されました');
       } catch (error) {
         this.showFeedback('設定の保存中にエラーが発生しました');
@@ -221,7 +220,7 @@ class OptionsUI {
       this.promptChatGPT.value = settings.promptChatGPT;
       this.promptClaude.value = settings.promptClaude;
       this.promptGemini.value = settings.promptGemini;
-      this.promptCopilot.value = settings.promptCopilot;
+      this.promptGitHubCopilot.value = settings.promptGitHubCopilot;
       this.validateInputs();
     } catch (error) {
       this.showFeedback('設定の読み込み中にエラーが発生しました');

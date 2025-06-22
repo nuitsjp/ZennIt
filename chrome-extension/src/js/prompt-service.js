@@ -17,8 +17,8 @@ function getStorageKey(promptType) {
       return STORAGE_KEYS.PROMPT_CLAUDE;
     case 'gemini':
       return STORAGE_KEYS.PROMPT_GEMINI;
-    case 'copilot':
-      return STORAGE_KEYS.PROMPT_COPILOT;
+    case 'githubcopilot':
+      return STORAGE_KEYS.PROMPT_GITHUBCOPILOT;
     default:
       throw new Error(`Unsupported prompt type: ${promptType}`);
   }

@@ -35,7 +35,7 @@ function debugLog(message) {
 /**
  * URLからプラットフォームタイプを判定する関数
  * @param {string} currentURL - 現在のURL
- * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'copilot')
+ * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot')
  */
 function getPlatformType(currentURL) {
   if (currentURL.includes("claude.ai")) {
@@ -44,8 +44,8 @@ function getPlatformType(currentURL) {
   if (currentURL.includes("gemini.google.com")) {
     return 'gemini';
   }
-  if (currentURL.includes("github.com/copilot")) {
-    return 'copilot';
+  if (currentURL.includes("github.com/githubcopilot")) {
+    return 'githubcopilot';
   }
   return 'chatgpt';
 }
@@ -61,7 +61,7 @@ function getInputSelector(platform) {
       return 'div[contenteditable="true"]';
     case 'gemini':
       return 'input-area-v2 .ql-editor[role="textbox"]';
-    case 'copilot':
+    case 'githubcopilot':
       return '#copilot-chat-textarea textarea';
     case 'chatgpt':
     default:
