@@ -5,6 +5,7 @@
 import GitHubService from '../js/github-service.js';
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
+import StorageService from '../js/storage-service.js';
 
 console.log("Publish script started loading...");
 
@@ -115,9 +116,8 @@ class PublishUI {
    * @returns {Promise<Object>} ストレージから読み込んだデータ
    */
   async loadStorageData() {
-    return new Promise((resolve) => {
-      chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY], resolve);
-    });
+    const repository = await StorageService.getRepository();
+    return { [STORAGE_KEYS.REPOSITORY]: repository };
   }
 
   /**

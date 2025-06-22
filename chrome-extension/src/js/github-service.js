@@ -4,6 +4,7 @@
 
 import { Octokit } from '@octokit/rest';
 import STORAGE_KEYS from './constants.js';
+import StorageService from './storage-service.js';
 
 /**
  * GitHubとの通信を管理するサービス
@@ -55,11 +56,7 @@ const GitHubService = {
    * @returns {Promise<string|null>} キャッシュされたトークン、またはnull
    */
   async getCachedToken() {
-    return new Promise((resolve) => {
-      chrome.storage.sync.get(STORAGE_KEYS.TOKEN, (result) => {
-        resolve(result[STORAGE_KEYS.TOKEN]);
-      });
-    });
+    return await StorageService.getToken();
   },
 
   /**
@@ -67,9 +64,7 @@ const GitHubService = {
    * @param {string} token キャッシュするトークン
    */
   async cacheToken(token) {
-    return new Promise((resolve) => {
-      chrome.storage.sync.set({ [STORAGE_KEYS.TOKEN]: token }, resolve);
-    });
+    await StorageService.setToken(token);
   },
 
   /**

@@ -4,6 +4,7 @@
 import STORAGE_KEYS, { SERVICES } from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
 import { getPrompt } from '../js/prompt-service.js';
+import StorageService from '../js/storage-service.js';
 
 // グローバル定数定義
 const FEEDBACK_DURATION = 3000; // フィードバック表示時間（ミリ秒）
@@ -36,8 +37,8 @@ const SettingsManager = {
    */
   async load() {
     try {
-      // リポジトリのみストレージから直接取得
-      const data = await chrome.storage.sync.get(STORAGE_KEYS.REPOSITORY);
+      // リポジトリのみStorageServiceから取得
+      const repository = await StorageService.getRepository();
       
       // プロンプトは全てgetPromptで取得（ストレージ→assetsの順で自動取得）
       const promptChatGPT = await getPrompt(SERVICES.CHATGPT.id);
@@ -47,7 +48,7 @@ const SettingsManager = {
       const promptMSCopilot = await getPrompt(SERVICES.MICROSOFT_COPILOT.id);
       
       return {
-        repository: data[STORAGE_KEYS.REPOSITORY] || '',
+        repository,
         promptChatGPT,
         promptClaude,
         promptGemini,
@@ -72,8 +73,8 @@ const SettingsManager = {
    */
   async save(repository, promptChatGPT, promptClaude, promptGemini, promptGitHubCopilot, promptMSCopilot) {
     try {
-      await chrome.storage.sync.set({
-        [STORAGE_KEYS.REPOSITORY]: repository.trim(),
+      await StorageService.setRepository(repository.trim());
+      await StorageService.setPrompts({
         [SERVICES.CHATGPT.id]: promptChatGPT.trim(),
         [SERVICES.CLAUDE.id]: promptClaude.trim(),
         [SERVICES.GEMINI.id]: promptGemini.trim(),

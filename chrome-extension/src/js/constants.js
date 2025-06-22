@@ -3,7 +3,8 @@
 // 共通定数を定義
 const STORAGE_KEYS = {
   REPOSITORY: 'repository',
-  TOKEN: 'github_token'
+  TOKEN: 'github_token',
+  IS_GENERATING: 'is_generating'
 };
 
 // サービス情報をオブジェクト化
