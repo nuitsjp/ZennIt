@@ -1,5 +1,12 @@
 // options.js
 
+// Material Web Components imports
+import '@material/web/textfield/outlined-text-field.js';
+import '@material/web/button/filled-button.js';
+import '@material/web/icon/icon.js';
+import '@material/web/tabs/tabs.js';
+import '@material/web/tabs/primary-tab.js';
+
 // 定数ファイルからストレージキーをインポート
 import STORAGE_KEYS, { SERVICES } from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
@@ -17,9 +24,9 @@ window.addEventListener('load', () => {
   Analytics.firePageViewEvent(document.title, document.location.href);
 });
 
-// Listen globally for all button events
+// Listen globally for all button events (including MWC buttons)
 document.addEventListener('click', (event) => {
-  if (event.target instanceof HTMLButtonElement) {
+  if (event.target instanceof HTMLButtonElement || event.target.tagName === 'MD-FILLED-BUTTON' || event.target.tagName === 'MD-PRIMARY-TAB') {
     Analytics.fireEvent('click_button', { id: event.target.id });
   }
 });
@@ -101,7 +108,8 @@ class OptionsUI {
     this.feedbackElement = this.createFeedbackElement();
 
     // タブ・プロンプト共通要素
-    this.tabButtons = document.querySelectorAll('.tab-button');
+    this.tabsElement = $('#serviceTabs');
+    this.tabButtons = document.querySelectorAll('md-primary-tab');
     this.promptTextarea = $('#promptTextarea');
     this.promptError = $('#promptError');
 
@@ -157,6 +165,16 @@ class OptionsUI {
 
     this.saveButton.addEventListener('click', () => this.save());
 
+    // Material Design Tabs events
+    this.tabsElement.addEventListener('change', (event) => {
+      const activeTabIndex = event.target.activeTabIndex;
+      const activeTab = this.tabButtons[activeTabIndex];
+      if (activeTab && activeTab.dataset.service) {
+        this.openTab(event, activeTab.dataset.service);
+      }
+    });
+
+    // Individual tab click events for backward compatibility
     this.tabButtons.forEach(button => {
       button.addEventListener('click', (event) => this.openTab(event, button.dataset.service));
     });
@@ -172,9 +190,14 @@ class OptionsUI {
     // 現在のテキストエリア内容を保存
     this.prompts[this.currentServiceKey] = this.promptTextarea.value;
 
-    // タブの選択状態を更新
-    this.tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.service === serviceKey));
+    // タブの選択状態を更新 (Material Design tabs handle this automatically)
     this.currentServiceKey = serviceKey;
+
+    // Material Design Tabs: Set active tab programmatically
+    const tabIndex = this.services.findIndex(service => service.key === serviceKey);
+    if (tabIndex >= 0) {
+      this.tabsElement.activeTabIndex = tabIndex;
+    }
 
     // テキストエリアとエラー表示を切り替え
     this.promptTextarea.value = this.prompts[serviceKey] || '';
@@ -279,8 +302,8 @@ class OptionsUI {
       this.prompts.GitHubCopilot = settings.promptGitHubCopilot;
       this.prompts.MSCopilot = settings.promptMSCopilot;
 
-      // 最初のタブをアクティブに
-      this.tabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.service === this.currentServiceKey));
+      // 最初のタブをアクティブに (Material Design tabs)
+      this.tabsElement.activeTabIndex = 0;
       this.promptTextarea.value = this.prompts[this.currentServiceKey] || '';
       this.updatePromptError();
       this.validateInputs();

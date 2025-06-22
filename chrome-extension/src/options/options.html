@@ -12,26 +12,36 @@
   <h2 class="required">GitHub リポジトリ</h2>
   <div class="github-path">
     <span>https://github.com/</span>
-    <input type="text" id="repository" placeholder="example/Zenn" required>
+    <md-outlined-text-field 
+      id="repository" 
+      placeholder="example/Zenn" 
+      required>
+    </md-outlined-text-field>
   </div>
   <div id="repositoryError" class="error-message">リポジトリを入力してください</div>
 
   <h2 class="required">要約プロンプト</h2>
-  <div class="tabs">
-    <button type="button" class="tab-button" data-service="ChatGPT" id="tabChatGPT">ChatGPT</button>
-    <button type="button" class="tab-button" data-service="Claude" id="tabClaude">Claude</button>
-    <button type="button" class="tab-button" data-service="Gemini" id="tabGemini">Gemini</button>
-    <button type="button" class="tab-button" data-service="GitHubCopilot" id="tabGitHubCopilot">GitHub Copilot</button>
-    <button type="button" class="tab-button" data-service="MSCopilot" id="tabMSCopilot">Microsoft Copilot</button>
-  </div>
+  <md-tabs id="serviceTabs">
+    <md-primary-tab data-service="ChatGPT" id="tabChatGPT">ChatGPT</md-primary-tab>
+    <md-primary-tab data-service="Claude" id="tabClaude">Claude</md-primary-tab>
+    <md-primary-tab data-service="Gemini" id="tabGemini">Gemini</md-primary-tab>
+    <md-primary-tab data-service="GitHubCopilot" id="tabGitHubCopilot">GitHub Copilot</md-primary-tab>
+    <md-primary-tab data-service="MSCopilot" id="tabMSCopilot">Microsoft Copilot</md-primary-tab>
+  </md-tabs>
   <div class="tab-content">
-    <textarea id="promptTextarea" rows="20" required></textarea>
+    <md-outlined-text-field 
+      id="promptTextarea" 
+      type="textarea" 
+      rows="20" 
+      required>
+    </md-outlined-text-field>
     <div id="promptError" class="error-message"></div>
   </div>
   
-  <button id="save">
-    <i class="material-icons">save</i>保存
-  </button>
+  <md-filled-button id="save">
+    <md-icon slot="icon">save</md-icon>
+    保存
+  </md-filled-button>
 
   <script src="options.bundle.js"></script>
 

@@ -55,6 +55,63 @@ md-icon-button {
   --md-icon-button-icon-color: #1976d2;
 }
 
+/* MWC Text Field adjustments */
+md-outlined-text-field {
+  width: 100%;
+  margin-top: 8px;
+  --md-outlined-text-field-outline-color: #ccc;
+  --md-outlined-text-field-focus-outline-color: #1976d2;
+}
+
+.github-path md-outlined-text-field {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* MWC Tabs adjustments */
+md-tabs {
+  --md-primary-tab-active-indicator-color: #1976d2;
+  --md-primary-tab-label-text-color: #1976d2;
+  --md-primary-tab-active-label-text-color: #1976d2;
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.tab-content {
+  background: #fff;
+  border: 1px solid #b6c6e3;
+  border-radius: 0 0 4px 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.tab-content md-outlined-text-field {
+  margin-top: 0;
+}
+
+/* Button container adjustments for MWC */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.button-container md-filled-button {
+  flex: 1;
+  margin-top: 0;
+  max-width: 200px;
+}
+
+#save {
+  margin-right: auto;
+}
+
+#close {
+  margin-left: auto;
+}
+
 /* Form elements */
 input[type="text"],
 textarea {

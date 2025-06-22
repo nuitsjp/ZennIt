@@ -10,23 +10,34 @@
   <h1>Zenn It! - Publish</h1>
   
   <h2 class="required">ファイル名</h2>
-  <input type="text" id="title" placeholder="例: yyyy-MM-dd-title.md" required>
+  <md-outlined-text-field 
+    id="title" 
+    placeholder="例: yyyy-MM-dd-title.md" 
+    required>
+  </md-outlined-text-field>
   <div id="titleError" class="error-message">ファイル名を入力してください。</div>
   
   <h2 class="required">記事</h2>
-  <textarea id="article" rows="30" required></textarea>
+  <md-outlined-text-field 
+    id="article" 
+    type="textarea" 
+    rows="30" 
+    required>
+  </md-outlined-text-field>
   <div id="articleError" class="error-message">記事を記載してください。</div>
   
   <!-- 新しいエラーメッセージ表示エリア -->
   <div id="publishError" class="error-message" style="display: none;"></div>
   
   <div class="button-container">
-    <button id="publish">
-      <i class="material-icons">publish</i>発行
-    </button>
-    <button id="close">
-      <i class="material-icons">close</i>閉じる
-    </button>
+    <md-filled-button id="publish">
+      <md-icon slot="icon">publish</md-icon>
+      発行
+    </md-filled-button>
+    <md-filled-button id="close" variant="outlined">
+      <md-icon slot="icon">close</md-icon>
+      閉じる
+    </md-filled-button>
   </div>
 
   <script src="publish.bundle.js"></script>

@@ -2,6 +2,11 @@
 // このスクリプトは、ユーザーが入力した記事をGitHubリポジトリに公開するための機能を提供します。
 // GitHubのOAuth認証、ファイルの作成、更新、およびエラー処理を含みます。
 
+// Material Web Components imports
+import '@material/web/textfield/outlined-text-field.js';
+import '@material/web/button/filled-button.js';
+import '@material/web/icon/icon.js';
+
 import GitHubService from '../js/github-service.js';
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
@@ -14,9 +19,9 @@ window.addEventListener('load', () => {
   Analytics.firePageViewEvent(document.title, document.location.href);
 });
 
-// Listen globally for all button events
+// Listen globally for all button events (including MWC buttons)
 document.addEventListener('click', (event) => {
-  if (event.target instanceof HTMLButtonElement) {
+  if (event.target instanceof HTMLButtonElement || event.target.tagName === 'MD-FILLED-BUTTON') {
     Analytics.fireEvent('click_button', { id: event.target.id });
   }
 });
