@@ -6,7 +6,7 @@ import STORAGE_KEYS from './constants.js';
 
 /**
  * プロンプトタイプに対応するストレージキーを取得
- * @param {string} promptType - プロンプトタイプ ('chatgpt' | 'claude' | 'gemini' | 'copilot')
+ * @param {string} promptType - プロンプトタイプ ('chatgpt' | 'claude' | 'gemini' | 'githubcopilot' | 'mscopilot')
  * @returns {string} ストレージキー
  */
 function getStorageKey(promptType) {
@@ -19,6 +19,8 @@ function getStorageKey(promptType) {
       return STORAGE_KEYS.PROMPT_GEMINI;
     case 'githubcopilot':
       return STORAGE_KEYS.PROMPT_GITHUBCOPILOT;
+    case 'mscopilot':
+      return STORAGE_KEYS.PROMPT_MSCOPILOT;
     default:
       throw new Error(`Unsupported prompt type: ${promptType}`);
   }

@@ -25,7 +25,7 @@ console.log("Zenn It! content script loaded");
 /**
  * URLからプラットフォームタイプを判定する関数
  * @param {string} currentURL - 現在のURL
- * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot')
+ * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot' | 'mscopilot')
  */
 function getPlatformType(currentURL) {
   if (currentURL.includes("claude.ai")) {
@@ -36,6 +36,9 @@ function getPlatformType(currentURL) {
   }
   if (currentURL.includes("github.com/copilot")) {
     return 'githubcopilot';
+  }
+  if (currentURL.includes("copilot.cloud.microsoft")) {
+    return 'mscopilot';
   }
   return 'chatgpt';
 }
@@ -53,6 +56,8 @@ function getInputSelector(platform) {
       return 'input-area-v2 .ql-editor[role="textbox"]';
     case 'githubcopilot':
       return '#copilot-chat-textarea';
+    case 'mscopilot':
+      return '#m365-chat-editor-target-element';
     case 'chatgpt':
     default:
       return '#prompt-textarea';
