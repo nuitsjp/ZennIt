@@ -21,15 +21,11 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 /**
  * デフォルト設定を初期化する関数
- * リポジトリ設定とプロンプトが未設定の場合、デフォルト値を設定します。
+ * リポジトリ設定が未設定の場合、デフォルト値を設定します。
+ * プロンプトは必要時に動的に読み込まれるため、ここでは初期化しません。
  */
 function initializeDefaultSettings() {
-  chrome.storage.sync.get([
-    STORAGE_KEYS.REPOSITORY,
-    STORAGE_KEYS.PROMPT_CHATGPT,
-    STORAGE_KEYS.PROMPT_CLAUDE,
-    STORAGE_KEYS.PROMPT_GEMINI
-  ], (result) => {
+  chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY], (result) => {
     const updates = {};
 
     // リポジトリ設定の初期化
@@ -38,45 +34,10 @@ function initializeDefaultSettings() {
       console.log("Initializing default repository setting.");
     }
 
-    // プロンプト設定の初期化
-    const promptTypes = [
-      { key: STORAGE_KEYS.PROMPT_CHATGPT, type: 'chatgpt' },
-      { key: STORAGE_KEYS.PROMPT_CLAUDE, type: 'claude' },
-      { key: STORAGE_KEYS.PROMPT_GEMINI, type: 'gemini' }
-    ];
-    const promises = promptTypes.map(item => {
-      if (!result[item.key]) {
-        return loadDefaultPrompt(item.type).then(defaultPrompt => {
-          updates[item.key] = defaultPrompt;
-        });
-      }
-      return Promise.resolve();
-    });
-
-    Promise.all(promises).then(() => {
-      if (Object.keys(updates).length > 0) {
-        saveSettings(updates);
-      }
-    });
+    if (Object.keys(updates).length > 0) {
+      saveSettings(updates);
+    }
   });
-}
-
-/**
- * デフォルトのプロンプトテキストを読み込む非同期関数
- * @param {string} promptType プロンプトの種類 ('chatgpt' または 'claude')
- * @returns {Promise<string>} デフォルトのプロンプトテキスト
- */
-async function loadDefaultPrompt(promptType) {
-  try {
-    const filePath = `assets/prompt/${promptType}.txt`;
-    const response = await fetch(chrome.runtime.getURL(filePath));
-    const text = await response.text();
-    console.log(`Default ${promptType} prompt loaded successfully.`);
-    return text;
-  } catch (error) {
-    console.error(`Error loading default ${promptType} prompt:`, error);
-    return ""; // エラー時は空文字列を返す
-  }
 }
 
 /**
