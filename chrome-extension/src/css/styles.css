@@ -34,6 +34,27 @@ h2 {
   color: #f44336;
 }
 
+/* Material Web Components theme variables */
+:root {
+  --md-sys-color-primary: #1976d2;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #e3eaf6;
+  --md-sys-color-on-primary-container: #1976d2;
+}
+
+/* MWC Button layout adjustments */
+md-filled-button {
+  --md-filled-button-container-color: #1976d2;
+  --md-filled-button-label-text-color: #ffffff;
+  display: block;
+  margin-top: 16px;
+  width: 100%;
+}
+
+md-icon-button {
+  --md-icon-button-icon-color: #1976d2;
+}
+
 /* Form elements */
 input[type="text"],
 textarea {

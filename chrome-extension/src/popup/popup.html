@@ -9,18 +9,20 @@
 <body class="popup-page">
   <div class="header">
     <h1>Zenn It!</h1>
-    <button id="openSettings" class="icon-button">
-      <i class="material-icons">settings</i>
-    </button>
+    <md-icon-button id="openSettings">
+      <md-icon>settings</md-icon>
+    </md-icon-button>
   </div>
 
-  <button id="generateSummary" class="button">
-    <i class="material-icons">summarize</i>要約
-  </button>
+  <md-filled-button id="generateSummary">
+    <md-icon slot="icon">summarize</md-icon>
+    要約
+  </md-filled-button>
 
-  <button id="publishArticle" class="button">
-    <i class="material-icons">publish</i>発行
-  </button>
+  <md-filled-button id="publishArticle">
+    <md-icon slot="icon">publish</md-icon>
+    発行
+  </md-filled-button>
 
   <div id="statusMessage" class="status-message" aria-live="polite"></div>
 

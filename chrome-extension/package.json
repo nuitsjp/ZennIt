@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@material/web": "^2.0.0",
     "@octokit/rest": "^21.1.1"
   },
   "devDependencies": {

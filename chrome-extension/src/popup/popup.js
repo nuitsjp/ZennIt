@@ -2,6 +2,11 @@
 // このスクリプトは、Chrome拡張機能のポップアップUIの動作を制御します。
 // 主な機能は、記事の要約生成と公開プロセスの開始です。
 
+// Material Web Components imports
+import '@material/web/button/filled-button.js';
+import '@material/web/icon/icon.js';
+import '@material/web/iconbutton/icon-button.js';
+
 // 共通の定数をインポート（ストレージキーなど）
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
@@ -14,9 +19,9 @@ window.addEventListener('load', () => {
   Analytics.firePageViewEvent(document.title, document.location.href);
 });
 
-// Listen globally for all button events
+// Listen globally for all button events (including MWC buttons)
 document.addEventListener('click', (event) => {
-  if (event.target instanceof HTMLButtonElement) {
+  if (event.target instanceof HTMLButtonElement || event.target.tagName === 'MD-FILLED-BUTTON' || event.target.tagName === 'MD-ICON-BUTTON') {
     Analytics.fireEvent('click_button', { id: event.target.id });
   }
 });
