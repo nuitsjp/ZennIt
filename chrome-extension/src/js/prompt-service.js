@@ -6,7 +6,7 @@ import STORAGE_KEYS from './constants.js';
 
 /**
  * プロンプトタイプに対応するストレージキーを取得
- * @param {string} promptType - プロンプトタイプ ('chatgpt' | 'claude' | 'gemini')
+ * @param {string} promptType - プロンプトタイプ ('chatgpt' | 'claude' | 'gemini' | 'copilot')
  * @returns {string} ストレージキー
  */
 function getStorageKey(promptType) {
@@ -17,6 +17,8 @@ function getStorageKey(promptType) {
       return STORAGE_KEYS.PROMPT_CLAUDE;
     case 'gemini':
       return STORAGE_KEYS.PROMPT_GEMINI;
+    case 'copilot':
+      return STORAGE_KEYS.PROMPT_COPILOT;
     default:
       throw new Error(`Unsupported prompt type: ${promptType}`);
   }

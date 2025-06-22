@@ -5,6 +5,7 @@
 // - Claude (claude.ai)
 // - ChatGPT (chatgpt.com および他のプラットフォーム - デフォルト)
 // - Gemini (gemini.google.com)
+// - GitHub Copilot (github.com/copilot)
 //
 // 新しいプラットフォーム追加方法:
 // 1. getPlatformType() 関数に新しいプラットフォームの判定を追加
@@ -34,7 +35,7 @@ function debugLog(message) {
 /**
  * URLからプラットフォームタイプを判定する関数
  * @param {string} currentURL - 現在のURL
- * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini')
+ * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'copilot')
  */
 function getPlatformType(currentURL) {
   if (currentURL.includes("claude.ai")) {
@@ -42,6 +43,9 @@ function getPlatformType(currentURL) {
   }
   if (currentURL.includes("gemini.google.com")) {
     return 'gemini';
+  }
+  if (currentURL.includes("github.com/copilot")) {
+    return 'copilot';
   }
   return 'chatgpt';
 }
@@ -57,6 +61,8 @@ function getInputSelector(platform) {
       return 'div[contenteditable="true"]';
     case 'gemini':
       return 'input-area-v2 .ql-editor[role="textbox"]';
+    case 'copilot':
+      return '#copilot-chat-textarea textarea';
     case 'chatgpt':
     default:
       return '#prompt-textarea';
