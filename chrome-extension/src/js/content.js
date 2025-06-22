@@ -25,7 +25,7 @@ console.log("Zenn It! content script loaded");
 /**
  * URLからプラットフォームタイプを判定する関数
  * @param {string} currentURL - 現在のURL
- * @returns {string} プラットフォーム名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot' | 'mscopilot')
+ * @returns {string} サービス名 ('claude' | 'chatgpt' | 'gemini' | 'githubcopilot' | 'mscopilot')
  */
 function getPlatformType(currentURL) {
   if (currentURL.includes("claude.ai")) {
@@ -45,11 +45,11 @@ function getPlatformType(currentURL) {
 
 /**
  * プラットフォームに応じた入力要素のセレクタを取得する関数
- * @param {string} platform - プラットフォーム名
+ * @param {string} serviceName - サービス名
  * @returns {string} CSSセレクタ
  */
-function getInputSelector(platform) {
-  switch (platform) {
+function getInputSelector(serviceName) {
+  switch (serviceName) {
     case 'claude':
       return 'div[contenteditable="true"]';
     case 'gemini':
@@ -88,8 +88,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function generateSummary() {
   try {
     const currentURL = window.location.href;
-    const platform = getPlatformType(currentURL);
-    const path = getInputSelector(platform);
+    const serviceName = getPlatformType(currentURL);
+    const path = getInputSelector(serviceName);
     const inputElement = await waitForElement(path);
     await inputPrompt(inputElement);
     await pressEnter(inputElement);
@@ -124,8 +124,8 @@ function waitForElement(selector) {
 async function inputPrompt(inputArea) {
   try {
     const currentURL = window.location.href;
-    const platform = getPlatformType(currentURL);
-    const promptText = await getPrompt(platform);
+    const serviceName = getPlatformType(currentURL);
+    const promptText = await getPrompt(serviceName);
     await simulateTyping(inputArea, promptText);
   } catch (error) {
     throw error;

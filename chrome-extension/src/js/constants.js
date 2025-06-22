@@ -3,13 +3,18 @@
 // 共通定数を定義
 const STORAGE_KEYS = {
   REPOSITORY: 'repository',
-  PROMPT_CHATGPT: 'promptChatGPT',
-  PROMPT_CLAUDE: 'promptClaude',
-  PROMPT_GEMINI: 'promptGemini',
-  PROMPT_GITHUBCOPILOT: 'promptGitHubCopilot',
-  PROMPT_MSCOPILOT: 'promptMSCopilot',
   TOKEN: 'github_token'
+};
+
+// サービス名とストレージキーのマッピング
+const SERVICE_STORAGE_KEYS = {
+  chatgpt: 'promptChatGPT',
+  claude: 'promptClaude', 
+  gemini: 'promptGemini',
+  githubcopilot: 'promptGitHubCopilot',
+  mscopilot: 'promptMSCopilot'
 };
 
 // このファイルを他のスクリプトで利用できるようにする
 export default STORAGE_KEYS;
+export { SERVICE_STORAGE_KEYS };

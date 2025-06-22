@@ -1,7 +1,7 @@
 // options.js
 
 // 定数ファイルからストレージキーをインポート
-import STORAGE_KEYS from '../js/constants.js';
+import STORAGE_KEYS, { SERVICE_STORAGE_KEYS } from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
 import { getPrompt } from '../js/prompt-service.js';
 
@@ -36,22 +36,17 @@ const SettingsManager = {
    */
   async load() {
     try {
-      const data = await chrome.storage.sync.get([
-        STORAGE_KEYS.REPOSITORY,
-        STORAGE_KEYS.PROMPT_CHATGPT,
-        STORAGE_KEYS.PROMPT_CLAUDE,
-        STORAGE_KEYS.PROMPT_GEMINI,
-        STORAGE_KEYS.PROMPT_GITHUBCOPILOT,
-        STORAGE_KEYS.PROMPT_MSCOPILOT
-      ]);
+      // 動的にストレージキーを構築
+      const storageKeys = [STORAGE_KEYS.REPOSITORY, ...Object.values(SERVICE_STORAGE_KEYS)];
+      const data = await chrome.storage.sync.get(storageKeys);
       console.log('load() storage data:', data); // デバッグ用
       
       // ストレージに保存されている値を優先し、ない場合はデフォルトプロンプトを取得
-      const promptChatGPT = data[STORAGE_KEYS.PROMPT_CHATGPT] || await getPrompt('chatgpt');
-      const promptClaude = data[STORAGE_KEYS.PROMPT_CLAUDE] || await getPrompt('claude');
-      const promptGemini = data[STORAGE_KEYS.PROMPT_GEMINI] || await getPrompt('gemini');
-      const promptGitHubCopilot = data[STORAGE_KEYS.PROMPT_GITHUBCOPILOT] || await getPrompt('githubcopilot');
-      const promptMSCopilot = data[STORAGE_KEYS.PROMPT_MSCOPILOT] || await getPrompt('mscopilot');
+      const promptChatGPT = data[SERVICE_STORAGE_KEYS.chatgpt] || await getPrompt('chatgpt');
+      const promptClaude = data[SERVICE_STORAGE_KEYS.claude] || await getPrompt('claude');
+      const promptGemini = data[SERVICE_STORAGE_KEYS.gemini] || await getPrompt('gemini');
+      const promptGitHubCopilot = data[SERVICE_STORAGE_KEYS.githubcopilot] || await getPrompt('githubcopilot');
+      const promptMSCopilot = data[SERVICE_STORAGE_KEYS.mscopilot] || await getPrompt('mscopilot');
       
       return {
         repository: data[STORAGE_KEYS.REPOSITORY] || '',
@@ -81,11 +76,11 @@ const SettingsManager = {
     try {
       await chrome.storage.sync.set({
         [STORAGE_KEYS.REPOSITORY]: repository.trim(),
-        [STORAGE_KEYS.PROMPT_CHATGPT]: promptChatGPT.trim(),
-        [STORAGE_KEYS.PROMPT_CLAUDE]: promptClaude.trim(),
-        [STORAGE_KEYS.PROMPT_GEMINI]: promptGemini.trim(),
-        [STORAGE_KEYS.PROMPT_GITHUBCOPILOT]: promptGitHubCopilot.trim(),
-        [STORAGE_KEYS.PROMPT_MSCOPILOT]: promptMSCopilot.trim()
+        [SERVICE_STORAGE_KEYS.chatgpt]: promptChatGPT.trim(),
+        [SERVICE_STORAGE_KEYS.claude]: promptClaude.trim(),
+        [SERVICE_STORAGE_KEYS.gemini]: promptGemini.trim(),
+        [SERVICE_STORAGE_KEYS.githubcopilot]: promptGitHubCopilot.trim(),
+        [SERVICE_STORAGE_KEYS.mscopilot]: promptMSCopilot.trim()
       });
       console.log('設定が保存されました');
     } catch (error) {
@@ -240,6 +235,11 @@ class OptionsUI {
 
 // DOMの読み込みが完了したらアプリケーションを初期化
 document.addEventListener('DOMContentLoaded', async () => {
+  const ui = new OptionsUI();
+  await ui.initialize();
+});
+
+console.log("Options script loaded successfully.");
   const ui = new OptionsUI();
   await ui.initialize();
 });
