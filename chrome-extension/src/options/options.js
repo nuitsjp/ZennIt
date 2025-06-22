@@ -1,7 +1,7 @@
 // options.js
 
 // 定数ファイルからストレージキーをインポート
-import STORAGE_KEYS, { SERVICE_NAMES } from '../js/constants.js';
+import STORAGE_KEYS, { SERVICES } from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
 import { getPrompt } from '../js/prompt-service.js';
 
@@ -37,16 +37,16 @@ const SettingsManager = {
   async load() {
     try {
       // 動的にストレージキーを構築
-      const storageKeys = [STORAGE_KEYS.REPOSITORY, ...Object.values(SERVICE_NAMES)];
+      const storageKeys = [STORAGE_KEYS.REPOSITORY, ...Object.values(SERVICES).map(service => service.id)];
       const data = await chrome.storage.sync.get(storageKeys);
       console.log('load() storage data:', data); // デバッグ用
       
       // ストレージに保存されている値を優先し、ない場合はデフォルトプロンプトを取得
-      const promptChatGPT = data[SERVICE_NAMES.CHATGPT] || await getPrompt(SERVICE_NAMES.CHATGPT);
-      const promptClaude = data[SERVICE_NAMES.CLAUDE] || await getPrompt(SERVICE_NAMES.CLAUDE);
-      const promptGemini = data[SERVICE_NAMES.GEMINI] || await getPrompt(SERVICE_NAMES.GEMINI);
-      const promptGitHubCopilot = data[SERVICE_NAMES.GITHUB_COPILOT] || await getPrompt(SERVICE_NAMES.GITHUB_COPILOT);
-      const promptMSCopilot = data[SERVICE_NAMES.MICROSOFT_COPILOT] || await getPrompt(SERVICE_NAMES.MICROSOFT_COPILOT);
+      const promptChatGPT = data[SERVICES.CHATGPT.id] || await getPrompt(SERVICES.CHATGPT.id);
+      const promptClaude = data[SERVICES.CLAUDE.id] || await getPrompt(SERVICES.CLAUDE.id);
+      const promptGemini = data[SERVICES.GEMINI.id] || await getPrompt(SERVICES.GEMINI.id);
+      const promptGitHubCopilot = data[SERVICES.GITHUB_COPILOT.id] || await getPrompt(SERVICES.GITHUB_COPILOT.id);
+      const promptMSCopilot = data[SERVICES.MICROSOFT_COPILOT.id] || await getPrompt(SERVICES.MICROSOFT_COPILOT.id);
       
       return {
         repository: data[STORAGE_KEYS.REPOSITORY] || '',
@@ -76,11 +76,11 @@ const SettingsManager = {
     try {
       await chrome.storage.sync.set({
         [STORAGE_KEYS.REPOSITORY]: repository.trim(),
-        [SERVICE_NAMES.CHATGPT]: promptChatGPT.trim(),
-        [SERVICE_NAMES.CLAUDE]: promptClaude.trim(),
-        [SERVICE_NAMES.GEMINI]: promptGemini.trim(),
-        [SERVICE_NAMES.GITHUB_COPILOT]: promptGitHubCopilot.trim(),
-        [SERVICE_NAMES.MICROSOFT_COPILOT]: promptMSCopilot.trim()
+        [SERVICES.CHATGPT.id]: promptChatGPT.trim(),
+        [SERVICES.CLAUDE.id]: promptClaude.trim(),
+        [SERVICES.GEMINI.id]: promptGemini.trim(),
+        [SERVICES.GITHUB_COPILOT.id]: promptGitHubCopilot.trim(),
+        [SERVICES.MICROSOFT_COPILOT.id]: promptMSCopilot.trim()
       });
       console.log('設定が保存されました');
     } catch (error) {

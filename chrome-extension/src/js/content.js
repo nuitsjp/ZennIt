@@ -12,7 +12,7 @@
 // 2. getInputSelector() 関数に新しいプラットフォームのセレクタを追加  
 // 3. getPromptKey() 関数に新しいプラットフォームのプロンプトキーを追加
 
-import STORAGE_KEYS, { SERVICE_STORAGE_KEYS, SERVICE_NAMES } from './constants.js';
+import STORAGE_KEYS, { SERVICES } from './constants.js';
 import { getPrompt } from './prompt-service.js';
 
 // 定数定義
@@ -28,18 +28,18 @@ console.log("Zenn It! content script loaded");
  */
 function getServiceName(currentURL) {
   if (currentURL.includes("claude.ai")) {
-    return SERVICE_NAMES.CLAUDE;
+    return SERVICES.CLAUDE.id;
   }
   if (currentURL.includes("gemini.google.com")) {
-    return SERVICE_NAMES.GEMINI;
+    return SERVICES.GEMINI.id;
   }
   if (currentURL.includes("github.com/copilot")) {
-    return SERVICE_NAMES.GITHUB_COPILOT;
+    return SERVICES.GITHUB_COPILOT.id;
   }
   if (currentURL.includes("copilot.cloud.microsoft")) {
-    return SERVICE_NAMES.MICROSOFT_COPILOT;
+    return SERVICES.MICROSOFT_COPILOT.id;
   }
-  return SERVICE_NAMES.CHATGPT;
+  return SERVICES.CHATGPT.id;
 }
 
 /**
@@ -49,15 +49,15 @@ function getServiceName(currentURL) {
  */
 function getInputSelector(serviceName) {
   switch (serviceName) {
-    case SERVICE_NAMES.CLAUDE:
+    case SERVICES.CLAUDE.id:
       return 'div[contenteditable="true"]';
-    case SERVICE_NAMES.GEMINI:
+    case SERVICES.GEMINI.id:
       return 'input-area-v2 .ql-editor[role="textbox"]';
-    case SERVICE_NAMES.GITHUB_COPILOT:
+    case SERVICES.GITHUB_COPILOT.id:
       return '#copilot-chat-textarea';
-    case SERVICE_NAMES.MICROSOFT_COPILOT:
+    case SERVICES.MICROSOFT_COPILOT.id:
       return '#m365-chat-editor-target-element';
-    case SERVICE_NAMES.CHATGPT:
+    case SERVICES.CHATGPT.id:
     default:
       return '#prompt-textarea';
   }
