@@ -22,27 +22,6 @@ const INPUT_DELAY = 50; // 入力後の遅延時間（ミリ秒）
 console.log("Zenn It! content script loaded");
 
 /**
- * プラットフォームに応じた入力要素のセレクタを取得する関数
- * @param {Object} service - サービスオブジェクト
- * @returns {string} CSSセレクタ
- */
-function getInputSelector(service) {
-  switch (service.id) {
-    case SERVICES.CLAUDE.id:
-      return 'div[contenteditable="true"]';
-    case SERVICES.GEMINI.id:
-      return 'input-area-v2 .ql-editor[role="textbox"]';
-    case SERVICES.GITHUB_COPILOT.id:
-      return '#copilot-chat-textarea';
-    case SERVICES.MICROSOFT_COPILOT.id:
-      return '#m365-chat-editor-target-element';
-    case SERVICES.CHATGPT.id:
-    default:
-      return '#prompt-textarea';
-  }
-}
-
-/**
  * Chrome拡張機能からのメッセージを処理するリスナー
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -67,8 +46,7 @@ async function generateSummary() {
   try {
     const currentURL = window.location.href;
     const service = SERVICES.getService(currentURL);
-    const path = getInputSelector(service);
-    const inputElement = await waitForElement(path);
+    const inputElement = await waitForElement(service.selector);
     await inputPrompt(inputElement, service);
     await pressEnter(inputElement);
   } catch (error) {

@@ -9,19 +9,24 @@ const STORAGE_KEYS = {
 // サービス情報をオブジェクト化
 const SERVICES = {
   CHATGPT: {
-    id: 'chatgpt'
+    id: 'chatgpt',
+    selector: '#prompt-textarea'
   },
   CLAUDE: {
-    id: 'claude'
+    id: 'claude',
+    selector: 'div[contenteditable="true"]'
   },
   GEMINI: {
-    id: 'gemini'
+    id: 'gemini',
+    selector: 'input-area-v2 .ql-editor[role="textbox"]'
   },
   GITHUB_COPILOT: {
-    id: 'githubcopilot'
+    id: 'githubcopilot',
+    selector: '#copilot-chat-textarea'
   },
   MICROSOFT_COPILOT: {
-    id: 'microsoftcopilot'
+    id: 'microsoftcopilot',
+    selector: '#m365-chat-editor-target-element'
   },
 
   /**
