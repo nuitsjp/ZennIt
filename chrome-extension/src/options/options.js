@@ -36,32 +36,15 @@ const SettingsManager = {
    */
   async load() {
     try {
-      // 動的にストレージキーを構築
-      const serviceKeys = Object.values(SERVICES)
-        .map(service => service?.id)
-        .filter(id => id && typeof id === 'string'); // undefined や無効な値を除外
+      // リポジトリのみストレージから直接取得
+      const data = await chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY]);
       
-      const storageKeys = [STORAGE_KEYS.REPOSITORY, ...serviceKeys];
-      
-      // デバッグ用ログ
-      console.log('SERVICES:', SERVICES);
-      console.log('serviceKeys:', serviceKeys);
-      console.log('storageKeys:', storageKeys);
-      
-      // ストレージキーの妥当性チェック
-      if (!Array.isArray(storageKeys) || storageKeys.some(key => typeof key !== 'string' || !key)) {
-        throw new Error('Invalid storage keys detected');
-      }
-      
-      const data = await chrome.storage.sync.get(storageKeys);
-      console.log('load() storage data:', data); // デバッグ用
-      
-      // ストレージに保存されている値を優先し、ない場合はデフォルトプロンプトを取得
-      const promptChatGPT = data[SERVICES.CHATGPT.id] || await getPrompt(SERVICES.CHATGPT.id);
-      const promptClaude = data[SERVICES.CLAUDE.id] || await getPrompt(SERVICES.CLAUDE.id);
-      const promptGemini = data[SERVICES.GEMINI.id] || await getPrompt(SERVICES.GEMINI.id);
-      const promptGitHubCopilot = data[SERVICES.GITHUB_COPILOT.id] || await getPrompt(SERVICES.GITHUB_COPILOT.id);
-      const promptMSCopilot = data[SERVICES.MICROSOFT_COPILOT.id] || await getPrompt(SERVICES.MICROSOFT_COPILOT.id);
+      // プロンプトは全てgetPromptで取得（ストレージ→assetsの順で自動取得）
+      const promptChatGPT = await getPrompt(SERVICES.CHATGPT.id);
+      const promptClaude = await getPrompt(SERVICES.CLAUDE.id);
+      const promptGemini = await getPrompt(SERVICES.GEMINI.id);
+      const promptGitHubCopilot = await getPrompt(SERVICES.GITHUB_COPILOT.id);
+      const promptMSCopilot = await getPrompt(SERVICES.MICROSOFT_COPILOT.id);
       
       return {
         repository: data[STORAGE_KEYS.REPOSITORY] || '',
