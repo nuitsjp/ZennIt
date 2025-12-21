@@ -46,18 +46,13 @@ jobs:
           cd dist
           zip -r ../zennit-${{ steps.version.outputs.VERSION }}.zip .
 
-      - name: Upload to Chrome Web Store
-        uses: mnao305/chrome-extension-upload@v5.0.0
-        with:
-          file-path: chrome-extension/zennit-${{ steps.version.outputs.VERSION }}.zip
-          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
-          client-id: ${{ secrets.CHROME_CLIENT_ID }}
-          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          publish: true
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: chrome-extension/zennit-${{ steps.version.outputs.VERSION }}.zip
           generate_release_notes: true
+          body: |
+            ## Chrome Web Store への公開
+            
+            GitHub Release に添付された `zennit-${{ steps.version.outputs.VERSION }}.zip` を
+            [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole/) からアップロードしてください。
