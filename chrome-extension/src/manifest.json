@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Zenn It!",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "ChatGPTやClaude.aiのチャット応対を要約し、Zennにブログとして公開するための拡張です。",
   "permissions": [
     "identity",
@@ -9,25 +9,27 @@
     "clipboardRead",
     "activeTab"
   ],
-  "web_accessible_resources": [{
-    "resources": [
-      "assets/prompt/chatgpt.txt",
-      "assets/prompt/claude.txt",
-      "assets/prompt/gemini.txt",
-      "assets/prompt/githubcopilot.txt",
-      "assets/prompt/mscopilot.txt",
-      "assets/json/config.json",
-      "js/constants.bundle.js"
-    ],
-    "matches": [
-      "https://claude.ai/*",
-      "https://chatgpt.com/*",
-      "https://gemini.google.com/*",
-      "https://github.com/*",
-      "https://copilot.cloud.microsoft/*",
-      "https://m365.cloud.microsoft/*"
-    ]
-  }],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/prompt/chatgpt.txt",
+        "assets/prompt/claude.txt",
+        "assets/prompt/gemini.txt",
+        "assets/prompt/githubcopilot.txt",
+        "assets/prompt/mscopilot.txt",
+        "assets/json/config.json",
+        "js/constants.bundle.js"
+      ],
+      "matches": [
+        "https://claude.ai/*",
+        "https://chatgpt.com/*",
+        "https://gemini.google.com/*",
+        "https://github.com/*",
+        "https://copilot.cloud.microsoft/*",
+        "https://m365.cloud.microsoft/*"
+      ]
+    }
+  ],
   "action": {
     "default_popup": "popup/popup.html"
   },
@@ -45,7 +47,9 @@
         "https://copilot.cloud.microsoft/*",
         "https://m365.cloud.microsoft/*"
       ],
-      "js": ["js/content.bundle.js"]
+      "js": [
+        "js/content.bundle.js"
+      ]
     }
   ],
   "options_page": "options/options.html",
