@@ -222,3 +222,53 @@ button:disabled {
 .icon-button:hover i {
   color: #1565c0;
 }
+
+/* タブUIのスタイル追加 */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.tab-button {
+  background: #e3eaf6;
+  color: #1976d2;
+  border: 1px solid #b6c6e3;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tab-button:not(.active):hover {
+  background: #d2e0f7;
+}
+
+.tab-button.active {
+  background: #fff;
+  color: #333;
+  border-bottom: 2px solid #fff;
+  font-weight: bold;
+  z-index: 2;
+  position: relative;
+}
+
+.tab-content {
+  background: #fff;
+  border: 1px solid #b6c6e3;
+  border-radius: 0 0 4px 4px;
+  padding: 0 0 16px 0;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  position: relative;
+  z-index: 1;
+}
+
+.tab-content textarea {
+  margin-top: 0;
+  margin-bottom: 0;
+}

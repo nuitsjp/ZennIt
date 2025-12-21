@@ -3,7 +3,8 @@
 // 共通定数を定義
 const STORAGE_KEYS = {
   REPOSITORY: 'repository',
-  TOKEN: 'github_token'
+  TOKEN: 'github_token',
+  IS_GENERATING: 'is_generating'
 };
 
 // サービス情報をオブジェクト化
@@ -45,6 +46,9 @@ const SERVICES = {
       return this.GITHUB_COPILOT;
     }
     if (currentURL.includes("copilot.cloud.microsoft")) {
+      return this.MICROSOFT_COPILOT;
+    }
+    if (currentURL.includes("m365.cloud.microsoft/chat")) {
       return this.MICROSOFT_COPILOT;
     }
     return this.CHATGPT;

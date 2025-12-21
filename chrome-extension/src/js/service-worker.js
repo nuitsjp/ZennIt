@@ -4,6 +4,7 @@
 
 import STORAGE_KEYS from './constants.js';
 import Analytics from './google-analytics.js';
+import StorageService from './storage-service.js';
 
 console.log("Zenn It! extension background loading...");
 
@@ -24,34 +25,29 @@ chrome.runtime.onInstalled.addListener((details) => {
  * リポジトリ設定が未設定の場合、デフォルト値を設定します。
  * プロンプトは必要時に動的に読み込まれるため、ここでは初期化しません。
  */
-function initializeDefaultSettings() {
-  chrome.storage.sync.get([STORAGE_KEYS.REPOSITORY], (result) => {
-    const updates = {};
-
-    // リポジトリ設定の初期化
-    if (!result[STORAGE_KEYS.REPOSITORY]) {
-      updates[STORAGE_KEYS.REPOSITORY] = "";
+async function initializeDefaultSettings() {
+  try {
+    const repository = await StorageService.getRepository();
+    if (!repository) {
+      await StorageService.setRepository("");
       console.log("Initializing default repository setting.");
     }
-
-    if (Object.keys(updates).length > 0) {
-      saveSettings(updates);
-    }
-  });
+  } catch (error) {
+    console.error('Error initializing default settings:', error);
+  }
 }
 
 /**
  * 設定を保存する関数
  * @param {Object} updates - 保存する設定のオブジェクト
  */
-function saveSettings(updates) {
+async function saveSettings(updates) {
   if (Object.keys(updates).length > 0) {
-    chrome.storage.sync.set(updates, () => {
-      if (chrome.runtime.lastError) {
-        console.error('Error saving settings:', chrome.runtime.lastError);
-      } else {
-        console.log('Settings saved successfully:', updates);
-      }
-    });
+    try {
+      await StorageService.set(updates);
+      console.log('Settings saved successfully:', updates);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
   }
 }

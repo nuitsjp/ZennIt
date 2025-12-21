@@ -2,6 +2,8 @@
 // 統一プロンプト取得サービス
 // ストレージとassetsフォルダからのプロンプト取得を一本化
 
+import StorageService from './storage-service.js';
+
 
 /**
  * assetsフォルダからプロンプトを読み込む
@@ -32,7 +34,7 @@ async function loadFromAssets(serviceName) {
  */
 async function cacheToStorage(serviceName, promptText) {
   try {
-    await chrome.storage.sync.set({ [serviceName]: promptText });
+    await StorageService.setPrompt(serviceName, promptText);
     console.log(`Prompt cached to storage: ${serviceName}`);
   } catch (error) {
     console.error(`Error caching prompt to storage (${serviceName}):`, error);
@@ -50,10 +52,10 @@ export async function getPrompt(serviceName, forceReload = false) {
   try {
     // 強制リロードでない場合、まずストレージをチェック
     if (!forceReload) {
-      const result = await chrome.storage.sync.get([serviceName]);
-      if (result[serviceName]) {
+      const prompt = await StorageService.getPrompt(serviceName);
+      if (prompt) {
         console.log(`Prompt retrieved from storage: ${serviceName}`);
-        return result[serviceName];
+        return prompt;
       }
     }
     // ストレージに存在しないか、強制リロードの場合はassetsから読み込み

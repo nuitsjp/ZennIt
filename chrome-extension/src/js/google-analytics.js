@@ -1,3 +1,5 @@
+import StorageService from './storage-service.js';
+
 const GA_ENDPOINT = 'https://www.google-analytics.com/mp/collect';
 const GA_DEBUG_ENDPOINT = 'https://www.google-analytics.com/debug/mp/collect';
 
@@ -18,11 +20,12 @@ class Analytics {
   // Stores client id in local storage to keep the same client id as long as
   // the extension is installed.
   async getOrCreateClientId() {
-    let { clientId } = await chrome.storage.local.get('clientId');
+    let clientId = await StorageService.get('clientId', 'local');
+    clientId = clientId.clientId;
     if (!clientId) {
       // Generate a unique client ID, the actual value is not relevant
       clientId = self.crypto.randomUUID();
-      await chrome.storage.local.set({ clientId });
+      await StorageService.set({ clientId }, 'local');
     }
     return clientId;
   }
@@ -31,7 +34,8 @@ class Analytics {
   // the previous one has expired.
   async getOrCreateSessionId() {
     // Use storage.session because it is only in memory
-    let { sessionData } = await chrome.storage.session.get('sessionData');
+    let result = await StorageService.get('sessionData', 'session');
+    let sessionData = result.sessionData;
     const currentTimeInMs = Date.now();
     // Check if session exists and is still valid
     if (sessionData && sessionData.timestamp) {
@@ -44,7 +48,7 @@ class Analytics {
       } else {
         // Update timestamp to keep session alive
         sessionData.timestamp = currentTimeInMs;
-        await chrome.storage.session.set({ sessionData });
+        await StorageService.set({ sessionData }, 'session');
       }
     }
     if (!sessionData) {
@@ -53,7 +57,7 @@ class Analytics {
         session_id: currentTimeInMs.toString(),
         timestamp: currentTimeInMs.toString()
       };
-      await chrome.storage.session.set({ sessionData });
+      await StorageService.set({ sessionData }, 'session');
     }
     return sessionData.session_id;
   }
