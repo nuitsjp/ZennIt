@@ -16,7 +16,7 @@
         "assets/prompt/claude.txt",
         "assets/prompt/gemini.txt",
         "assets/prompt/githubcopilot.txt",
-        "assets/prompt/mscopilot.txt",
+        "assets/prompt/microsoftcopilot.txt",
         "assets/json/config.json",
         "js/constants.bundle.js"
       ],
