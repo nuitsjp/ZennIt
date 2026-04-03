@@ -10,7 +10,7 @@ public class ExchangeGitHubToken(
     ILoggerFactory loggerFactory)
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<ExchangeGitHubToken>();
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
+    private readonly GitHubOAuthClient _gitHubOAuthClient = new(httpClientFactory.CreateClient());
 
     [Function("ExchangeGitHubToken")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
@@ -38,22 +38,13 @@ public class ExchangeGitHubToken(
         var clientSecret = Environment.GetEnvironmentVariable("GitHubClientSecret");
         if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
         {
-            // ì‡ïîÉGÉâÅ[
             return req.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
-        var values = new Dictionary<string, string>
-        {
-            { "client_id", clientId },
-            { "client_secret", clientSecret },
-            { "code", code }
-        };
-        var content = new FormUrlEncodedContent(values);
-        var response = await _httpClient.PostAsync("https://github.com/login/oauth/access_token", content);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var gitHubResponse = await _gitHubOAuthClient.ExchangeCodeForAccessTokenAsync(clientId, clientSecret, code);
 
-        var okResponse = req.CreateResponse(HttpStatusCode.OK);
-        await okResponse.WriteStringAsync(responseString);
-        return okResponse;
+        var proxyResponse = req.CreateResponse(gitHubResponse.StatusCode);
+        await proxyResponse.WriteStringAsync(gitHubResponse.Body);
+        return proxyResponse;
     }
 }

@@ -14,9 +14,11 @@
 
 import STORAGE_KEYS, { SERVICES } from './constants.js';
 import { getPrompt } from './prompt-service.js';
+import { waitForElement as waitForDomElement } from './dom-waiter.mjs';
 
 // 定数定義
 const RETRY_INTERVAL = 500; // 要素を再チェックする間隔（ミリ秒）
+const ELEMENT_TIMEOUT = 10000; // 要素探索のタイムアウト（ミリ秒）
 const INPUT_DELAY = 50; // 入力後の遅延時間（ミリ秒）
 
 console.log("Zenn It! content script loaded");
@@ -60,16 +62,11 @@ async function generateSummary() {
  * @returns {Promise<Element>} 見つかった要素
  */
 function waitForElement(selector) {
-  return new Promise((resolve) => {
-    const checkElement = () => {
-      const element = document.querySelector(selector);
-      if (element) {
-        resolve(element);
-      } else {
-        setTimeout(checkElement, RETRY_INTERVAL);
-      }
-    };
-    checkElement();
+  return waitForDomElement({
+    findElement: () => document.querySelector(selector),
+    retryIntervalMs: RETRY_INTERVAL,
+    timeoutMs: ELEMENT_TIMEOUT,
+    timeoutMessage: `入力欄が見つかりませんでした: ${selector}`
   });
 }
 

@@ -1,15 +1,26 @@
 import StorageService from './storage-service.js';
 
-const GA_ENDPOINT = 'https://www.google-analytics.com/mp/collect';
-const GA_DEBUG_ENDPOINT = 'https://www.google-analytics.com/debug/mp/collect';
-
-// Get via https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag#recommended_parameters_for_reports
-const MEASUREMENT_ID = 'G-150ZXPLM78';
-const API_SECRET = 'Hb_8d1ckQH2lCX7pAOiLfw';
 const DEFAULT_ENGAGEMENT_TIME_MSEC = 100;
 
 // Duration of inactivity after which a new session is created
 const SESSION_EXPIRATION_IN_MIN = 30;
+let analyticsConfigPromise = null;
+
+async function getAnalyticsFunctionUrl(debug) {
+  if (!analyticsConfigPromise) {
+    analyticsConfigPromise = fetch(chrome.runtime.getURL('assets/json/config.json'))
+      .then((response) => response.json());
+  }
+
+  const config = await analyticsConfigPromise;
+  if (!config.ANALYTICS_FUNCTION_URL) {
+    return null;
+  }
+
+  return debug
+    ? `${config.ANALYTICS_FUNCTION_URL}?debug=true`
+    : config.ANALYTICS_FUNCTION_URL;
+}
 
 class Analytics {
   constructor(debug = false) {
@@ -74,23 +85,26 @@ class Analytics {
     }
 
     try {
-      const response = await fetch(
-        `${
-          this.debug ? GA_DEBUG_ENDPOINT : GA_ENDPOINT
-        }?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            client_id: await this.getOrCreateClientId(),
-            events: [
-              {
-                name,
-                params
-              }
-            ]
-          })
-        }
-      );
+      const endpoint = await getAnalyticsFunctionUrl(this.debug);
+      if (!endpoint) {
+        return;
+      }
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          client_id: await this.getOrCreateClientId(),
+          events: [
+            {
+              name,
+              params
+            }
+          ]
+        })
+      });
       if (!this.debug) {
         return;
       }

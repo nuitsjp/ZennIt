@@ -6,6 +6,11 @@
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
 import StorageService from '../js/storage-service.js';
+import { isSupportedPageUrl } from '../js/service-config.mjs';
+import {
+  createSummaryFailureMessage,
+  ensureSummaryGenerationSucceeded
+} from '../js/summary-response.mjs';
 
 console.log("Popup script started loading...");
 
@@ -34,14 +39,6 @@ class PopupUI {
     this.publishArticleBtn = $('#publishArticle');
     this.openSettingsBtn = $('#openSettings'); // 設定ボタンの取得
     this.statusMessage = $('#statusMessage');
-    // 許可されたURLのリスト
-    this.allowedUrls = [
-      "https://claude.ai/", 
-      "https://chatgpt.com/", 
-      "https://gemini.google.com/",
-      "https://github.com/copilot",
-      "https://copilot.cloud.microsoft/"
-    ];
   }
 
   /**
@@ -99,7 +96,7 @@ class PopupUI {
         if (tabs.length > 0) {
           console.log(`Current tab: ${tabs[0]} URL: ${tabs[0].url}`);
           const currentUrl = tabs[0].url;
-          const isAllowed = this.allowedUrls.some(url => currentUrl.startsWith(url));
+          const isAllowed = isSupportedPageUrl(currentUrl);
           resolve(isAllowed);
         } else {
           resolve(false);
@@ -144,10 +141,11 @@ class PopupUI {
 
       const message = {action: 'generateSummary'};
       const response = await chrome.tabs.sendMessage(tabs[0].id, message);
+      ensureSummaryGenerationSucceeded(response);
       window.close();
     } catch (error) {
       console.error("要約生成中にエラーが発生しました:", error);
-      this.showStatus("要約生成中にエラーが発生しました", true);
+      this.showStatus(createSummaryFailureMessage(error), true);
     } finally {
       this.updateButtonStates();
     }

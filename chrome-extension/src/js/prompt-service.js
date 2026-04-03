@@ -3,6 +3,7 @@
 // ストレージとassetsフォルダからのプロンプト取得を一本化
 
 import StorageService from './storage-service.js';
+import { getPromptAssetPath } from './service-config.mjs';
 
 
 /**
@@ -12,7 +13,10 @@ import StorageService from './storage-service.js';
  */
 async function loadFromAssets(serviceName) {
   try {
-    const filePath = `assets/prompt/${serviceName}.txt`;
+    const filePath = getPromptAssetPath(serviceName);
+    if (!filePath) {
+      throw new Error(`Unknown service: ${serviceName}`);
+    }
     const response = await fetch(chrome.runtime.getURL(filePath));
     if (!response.ok) {
       throw new Error(`Failed to fetch ${filePath}: ${response.status}`);

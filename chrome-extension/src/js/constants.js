@@ -1,5 +1,7 @@
 // constants.js
 
+import { SERVICE_DEFINITIONS, getServiceByUrl } from './service-config.mjs';
+
 // 共通定数を定義
 const STORAGE_KEYS = {
   REPOSITORY: 'repository',
@@ -10,24 +12,24 @@ const STORAGE_KEYS = {
 // サービス情報をオブジェクト化
 const SERVICES = {
   CHATGPT: {
-    id: 'chatgpt',
-    selector: '#prompt-textarea'
+    id: SERVICE_DEFINITIONS.chatgpt.id,
+    selector: SERVICE_DEFINITIONS.chatgpt.selector
   },
   CLAUDE: {
-    id: 'claude',
-    selector: 'div[contenteditable="true"]'
+    id: SERVICE_DEFINITIONS.claude.id,
+    selector: SERVICE_DEFINITIONS.claude.selector
   },
   GEMINI: {
-    id: 'gemini',
-    selector: 'input-area-v2 .ql-editor[role="textbox"]'
+    id: SERVICE_DEFINITIONS.gemini.id,
+    selector: SERVICE_DEFINITIONS.gemini.selector
   },
   GITHUB_COPILOT: {
-    id: 'githubcopilot',
-    selector: '#copilot-chat-textarea'
+    id: SERVICE_DEFINITIONS.githubcopilot.id,
+    selector: SERVICE_DEFINITIONS.githubcopilot.selector
   },
   MICROSOFT_COPILOT: {
-    id: 'microsoftcopilot',
-    selector: '#m365-chat-editor-target-element'
+    id: SERVICE_DEFINITIONS.microsoftcopilot.id,
+    selector: SERVICE_DEFINITIONS.microsoftcopilot.selector
   },
 
   /**
@@ -36,19 +38,17 @@ const SERVICES = {
    * @returns {Object} サービスオブジェクト
    */
   getService(currentURL) {
-    if (currentURL.includes("claude.ai")) {
+    const service = getServiceByUrl(currentURL);
+    if (service.id === this.CLAUDE.id) {
       return this.CLAUDE;
     }
-    if (currentURL.includes("gemini.google.com")) {
+    if (service.id === this.GEMINI.id) {
       return this.GEMINI;
     }
-    if (currentURL.includes("github.com/copilot")) {
+    if (service.id === this.GITHUB_COPILOT.id) {
       return this.GITHUB_COPILOT;
     }
-    if (currentURL.includes("copilot.cloud.microsoft")) {
-      return this.MICROSOFT_COPILOT;
-    }
-    if (currentURL.includes("m365.cloud.microsoft/chat")) {
+    if (service.id === this.MICROSOFT_COPILOT.id) {
       return this.MICROSOFT_COPILOT;
     }
     return this.CHATGPT;
