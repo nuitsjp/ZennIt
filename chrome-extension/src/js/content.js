@@ -14,6 +14,10 @@
 
 import STORAGE_KEYS, { SERVICES } from './constants.js';
 import { getPrompt } from './prompt-service.js';
+import {
+  pressEnterIntoElement,
+  simulateTypingIntoElement
+} from './content-dom-helpers.mjs';
 import { waitForElement as waitForDomElement } from './dom-waiter.mjs';
 
 // 定数定義
@@ -90,27 +94,10 @@ async function inputPrompt(inputArea, service) {
  * @param {string} text - 入力するテキスト
  */
 async function simulateTyping(element, text) {
-  // textareaの場合はvalueを使う
-  if (element.tagName === 'TEXTAREA') {
-    element.value += text;
-    const event = new InputEvent('input', {
-      inputType: 'insertText',
-      data: text,
-      bubbles: true,
-      cancelable: true,
-    });
-    element.dispatchEvent(event);
-  } else {
-    element.textContent += text;
-    const event = new InputEvent('input', {
-      inputType: 'insertText',
-      data: text,
-      bubbles: true,
-      cancelable: true,
-    });
-    element.dispatchEvent(event);
-  }
-  await new Promise(resolve => setTimeout(resolve, INPUT_DELAY));
+  await simulateTypingIntoElement(element, text, {
+    createInputEvent: (type, init) => new InputEvent(type, init),
+    delay: () => new Promise(resolve => setTimeout(resolve, INPUT_DELAY))
+  });
 }
 
 /**
@@ -118,14 +105,8 @@ async function simulateTyping(element, text) {
  * @param {Element} element - 対象の要素
  */
 async function pressEnter(element) {
-  const enterEvent = new KeyboardEvent('keydown', {
-    bubbles: true,
-    cancelable: true,
-    key: 'Enter',
-    keyCode: 13
+  await pressEnterIntoElement(element, {
+    createKeyboardEvent: (type, init) => new KeyboardEvent(type, init),
+    createEvent: (type, init) => new Event(type, init)
   });
-  element.dispatchEvent(enterEvent);
-  element.textContent += '\n';
-  element.dispatchEvent(new Event('input', { bubbles: true }));
-  await Promise.resolve();
 }
