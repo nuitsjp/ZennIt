@@ -6,6 +6,10 @@
 import STORAGE_KEYS from '../js/constants.js';
 import Analytics from '../js/google-analytics.js';
 import StorageService from '../js/storage-service.js';
+import {
+  applyStatusToElement,
+  clearStatusElement
+} from '../js/popup-status.mjs';
 import { isSupportedPageUrl } from '../js/service-config.mjs';
 import {
   createSummaryFailureMessage,
@@ -111,9 +115,7 @@ class PopupUI {
    * @param {boolean} isError エラーメッセージの場合はtrue
    */
   showStatus(message, isError = false) {
-    this.statusMessage.textContent = message;
-    this.statusMessage.classList.toggle('error', isError);
-    this.statusMessage.hidden = false;
+    applyStatusToElement(this.statusMessage, message, isError);
   }
 
   /**
@@ -121,9 +123,7 @@ class PopupUI {
    * メッセージを非表示にし、内容をクリアします
    */
   clearStatus() {
-    this.statusMessage.hidden = true;
-    this.statusMessage.classList.toggle('error', false);
-    this.statusMessage.textContent = '';
+    clearStatusElement(this.statusMessage);
   }
 
   /**
