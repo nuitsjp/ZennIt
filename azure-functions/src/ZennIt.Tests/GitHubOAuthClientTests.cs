@@ -24,11 +24,4 @@ public class GitHubOAuthClientTests
         Assert.Equal("bad_verification_code", result.Body);
     }
 
-    private sealed class StubHttpMessageHandler(HttpResponseMessage response) : HttpMessageHandler
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(response);
-        }
-    }
 }

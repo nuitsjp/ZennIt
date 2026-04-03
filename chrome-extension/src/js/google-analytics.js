@@ -1,4 +1,8 @@
 import StorageService from './storage-service.js';
+import {
+  buildAnalyticsBody,
+  buildAnalyticsEndpoint
+} from './analytics-request.mjs';
 
 const DEFAULT_ENGAGEMENT_TIME_MSEC = 100;
 
@@ -17,9 +21,7 @@ async function getAnalyticsFunctionUrl(debug) {
     return null;
   }
 
-  return debug
-    ? `${config.ANALYTICS_FUNCTION_URL}?debug=true`
-    : config.ANALYTICS_FUNCTION_URL;
+  return buildAnalyticsEndpoint(config.ANALYTICS_FUNCTION_URL, debug);
 }
 
 class Analytics {
@@ -95,15 +97,7 @@ class Analytics {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          client_id: await this.getOrCreateClientId(),
-          events: [
-            {
-              name,
-              params
-            }
-          ]
-        })
+        body: buildAnalyticsBody(await this.getOrCreateClientId(), name, params)
       });
       if (!this.debug) {
         return;
